@@ -14,7 +14,9 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
+from product.views import (list_products)
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^$', list_products, name='products' ),
 ]

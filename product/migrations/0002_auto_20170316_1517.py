@@ -12,13 +12,13 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AlterField(
-            model_name='product',
-            name='is_published',
-            field=models.BooleanField(verbose_name='Publish?', default=False),
+            model_name='category',
+            name='slug',
+            field=models.SlugField(unique=True, max_length=200),
         ),
         migrations.AlterField(
             model_name='product',
-            name='name',
-            field=models.CharField(help_text='Please Enter a Generic Name', max_length=150),
+            name='slug',
+            field=models.SlugField(max_length=200),
         ),
     ]
