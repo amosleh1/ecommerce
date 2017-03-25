@@ -1,0 +1,55 @@
+
+
+<!--
+*****************  Search Input Related Section ***********************
+-->
+
+				<div class="input-group" id="boot-search-box">
+	                <input type="text" class="form-control" placeholder="Search on a Product" />
+	                <div class="input-group-btn">
+	                    <div class="btn-group" role="group">
+	                        <div class="dropdown dropdown-lg">
+	                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span class="caret"></span></button>
+	                            <div class="dropdown-menu dropdown-menu-right" role="menu" method="post">
+	                                
+	                                <form class="form-horizontal" role="form">
+	                                {% csrf_token %}
+	                                  	<div class="form-group">
+	                                    	<label for="filter">Search within a Category:</label>
+	                                    	<select class="form-control">
+	                                        	<option value="catalogue" selected>Whole catalogue</option>
+	                                        	<option value="modal">Modal</option>
+	                                        	<option value="price">Price</option>
+	                                        	<option value="popular">Most Popular</option>
+	                                    	</select>
+	                                	</div>
+	                                <div class="form-group">
+	                                    <label for="contain">Exact Match:</label>
+	                                    <input class="form-control" type="text" />
+	                                </div>
+	                                <div class="form-group">
+	                                    <label for="password1" class="col-sm-3 control-label">Price Range:</label>
+	                                	<div class="col-sm-3">
+	                                    	<input type="text" class="form-control" id="max-price" placeholder="Max"> 
+	                                    	<input type="text" class="form-control" id="min-price" placeholder="Min">
+	                                	</div>
+	                                  	<br /><br /><br /><br />                        
+	                                  	<button type="submit" class="btn btn-primary btn-block">Search :: <span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
+	                                </form>
+	                            	</div>
+	                        	</div>
+	                        	<button type="button" class="btn btn-success "><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
+	                    	</div>
+	                	</div>
+	            	</div>
+	          	</div>
+
+
+
+
+
+
+
+
+
+

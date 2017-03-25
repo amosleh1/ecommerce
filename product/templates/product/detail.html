@@ -1,0 +1,56 @@
+{% extends "product/base.html" %}
+{% load static %}
+{% block title %}
+	{% if category %}
+		{{ category.title }}
+	{% else %}Products
+	{% endif %}
+{% endblock %}
+
+{% block content %}  
+
+	<div class="container">
+		<div class="row">
+
+		    <div class="col-sm-3">
+			      <ul class="nav nav-pills nav-stacked">
+				        Related Products: {% for r_product in related_products %} 
+				        	<li ><a href="{{ r_product.get_absolute_url }}">{{ r_product.name }}</a> </li>
+				        {% endfor %}
+			      </ul> 
+		    </div>
+
+		    <div class="col-sm-6">
+
+				<img src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'img/no_image.png' %}{% endif %}" >    
+				<h1>{{ product.name }}</h1>    
+				<p>
+					Related Category: {% for category in product.categories.all %} 
+						<a href="{{ category.get_absolute_url }}">{{ category.name }}</a>
+					{% endfor %}
+				</p>    
+				<p> Price: ${{ product.price }}</p>     
+				<p>{{ product.description|linebreaks }} </p> 
+				<p>{{ product.model}} </p>
+				<p>{{ product.slug}}</p>
+				{% if product.show_stock %}
+					<p>Stock Quantity: {{ product.stock}} </p>
+				{% endif %}
+				{% if product.is_discounted %}
+ 					<p>Discounted Price: {{ product.discounted_price}} </p>
+					<p>Discount Expiration Date: {{ product.discount_expire}} </p>
+				{% endif %}
+				<p>Created Date: {{ product.created|date }}</p>
+				<p>Updated Date: {{ product.updated|date }}</p>
+
+			</div>  
+
+		    <div class="col-sm-3">
+		    </div>
+
+		</div>
+	</div>
+
+
+
+{% endblock %}

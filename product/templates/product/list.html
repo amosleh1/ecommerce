@@ -1,0 +1,81 @@
+{% extends "product/base.html" %}
+{% load staticfiles %}
+
+
+{% block title %}  
+	{% if category %}{{ category.name }}
+	{% else %}Products
+	{% endif %}
+{% endblock %}
+
+
+{% block content %}  
+	  
+	<div class="container">
+	  <div class="row">
+
+	    <nav class="col-sm-2">
+	      <h3>Categories</h3> 
+	      <ul class="nav nav-pills nav-stacked" >
+	        <li {% if not category %} class="active"{% endif %}><a href="{% url "product:product_list" %}">All</a> </li>
+		        {% for c in categories %} 
+		        	<li  {% if category.slug == c.slug %} class="active" {% endif %}   ><a href="{{ c.get_absolute_url }}">{{ c.name|upper }}</a></li>
+		        {% endfor %}
+	      </ul>
+	    </nav>
+
+
+	    <div class="col-sm-9">
+
+			<h1>
+				{% if category %}
+					{{ category.name }}
+				{% else %}All Products
+				{% endif %}
+			</h1>
+
+			<form >
+
+			{% for product in products %}                   
+				<div class="gallery">
+					<a href="{{ product.get_absolute_url }}">    
+	   					<img src="{% if product.image %}{{ product.image.url }}{% else %}{% static "img/no_image.png" %}{% endif %}"  width="300" height="200" alt="Image">        
+	   				</a> 
+		   			<div class="desc"><a href="{{ product.get_absolute_url }}">{{ product.name }}</a></div>
+			        <div class="desc">${{ product.price }}</div>
+				</div>
+			{% endfor %}
+	    </div>
+
+
+
+	  </div>
+
+
+	  <div class="row">
+	    <div class="col-sm-3">
+	    </div>
+			<div class="pagination">
+			    <span class="step-links">
+			        {% if products.has_previous %}
+			            <a href="?page={{ products.previous_page_number }}">previous</a>
+			        {% endif %}
+
+			        <span class="current">
+			            Page {{ products.number }} of {{ products.paginator.num_pages }}.
+			        </span>
+
+			        {% if products.has_next %}
+			            <a href="?page={{ products.next_page_number }}">next</a>
+			        {% endif %}
+			    </span>
+			</div>
+	    <div class="col-sm-9">
+
+		</div>
+
+	</div>
+{% endblock %}
+
+
+
