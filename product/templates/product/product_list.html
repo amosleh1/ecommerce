@@ -19,7 +19,7 @@
 	      <ul class="nav nav-pills nav-stacked" >
 	        <li {% if not category %} class="active"{% endif %}><a href="{% url "product:product_list" %}">All</a> </li>
 		        {% for c in categories %} 
-		        	<li  {% if category.slug == c.slug %} class="active" {% endif %}   ><a href="{{ c.get_absolute_url }}">{{ c.name|upper }}</a></li>
+		        	<li  {% if category.slug == c.slug %} class="active" {% endif %}   ><a href="{{ c.get_absolute_url }}">{{ c.name|title }}</a></li>
 		        {% endfor %}
 	      </ul>
 	    </nav>
@@ -27,27 +27,23 @@
 
 	    <div class="col-sm-9">
 
-			<h1>
+			<h2>
 				{% if category %}
 					{{ category.name }}
 				{% else %}All Products
 				{% endif %}
-			</h1>
-
-			<form >
+			</h2>
 
 			{% for product in products %}                   
 				<div class="gallery">
 					<a href="{{ product.get_absolute_url }}">    
 	   					<img src="{% if product.image %}{{ product.image.url }}{% else %}{% static "img/no_image.png" %}{% endif %}"  width="300" height="200" alt="Image">        
 	   				</a> 
-		   			<div class="desc"><a href="{{ product.get_absolute_url }}">{{ product.name }}</a></div>
+		   			<div class="desc"><a href="{{ product.get_absolute_url }}">{{ product.name|slice:":35" }}</a></div>
 			        <div class="desc">${{ product.price }}</div>
 				</div>
 			{% endfor %}
 	    </div>
-
-
 
 	  </div>
 

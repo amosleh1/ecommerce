@@ -1,48 +1,68 @@
 
 
-<!--
-*****************  Search Input Related Section ***********************
--->
+<form class="form-horizontal" role="form"  action="/search/" method="GET">
+	{% csrf_token %}
+	<div class="input-group" id="boot-search-box">
+		
+		<!--*****************  Main Search Text Field *********************** -->
+        <input type="text" name="search_query" id="id_search_query" class="form-control" placeholder="Search on a Product" value="{{original_search_text}}" />
+       
 
-				<div class="input-group" id="boot-search-box">
-	                <input type="text" class="form-control" placeholder="Search on a Product" />
-	                <div class="input-group-btn">
-	                    <div class="btn-group" role="group">
-	                        <div class="dropdown dropdown-lg">
-	                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span class="caret"></span></button>
-	                            <div class="dropdown-menu dropdown-menu-right" role="menu" method="post">
-	                                
-	                                <form class="form-horizontal" role="form">
-	                                {% csrf_token %}
-	                                  	<div class="form-group">
-	                                    	<label for="filter">Search within a Category:</label>
-	                                    	<select class="form-control">
-	                                        	<option value="catalogue" selected>Whole catalogue</option>
-	                                        	<option value="modal">Modal</option>
-	                                        	<option value="price">Price</option>
-	                                        	<option value="popular">Most Popular</option>
-	                                    	</select>
-	                                	</div>
-	                                <div class="form-group">
-	                                    <label for="contain">Exact Match:</label>
-	                                    <input class="form-control" type="text" />
-	                                </div>
-	                                <div class="form-group">
-	                                    <label for="password1" class="col-sm-3 control-label">Price Range:</label>
-	                                	<div class="col-sm-3">
-	                                    	<input type="text" class="form-control" id="max-price" placeholder="Max"> 
-	                                    	<input type="text" class="form-control" id="min-price" placeholder="Min">
-	                                	</div>
-	                                  	<br /><br /><br /><br />                        
-	                                  	<button type="submit" class="btn btn-primary btn-block">Search :: <span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
-	                                </form>
-	                            	</div>
-	                        	</div>
-	                        	<button type="button" class="btn btn-success "><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
-	                    	</div>
-	                	</div>
-	            	</div>
-	          	</div>
+        <div class="input-group-btn search-panel">
+
+
+            <!--*****************  Categories List *********************** -->
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+            	<span id="search_concept">All</span> <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu">
+            	{% for c in categories %} 
+					<li  {% if category.slug == c.slug %} class="active" {% endif %}><a href="#{{ c.name }}">{{ c.name|title }}</a></li>
+				{% endfor %}
+              <li class="divider"></li>
+              <li {% if not category %} class="active"{% endif %}><a href="#None">All</a></li>
+            </ul>
+            <!-- this is where the Menue value is changed by the JS and sent - check the JS Script -->
+            <input type="hidden" name="search_category" value="None" id="search_category"> 
+
+
+
+            <div class="btn-group " role="group">
+
+
+                <!--*****************  Advanced Search DropDown List  *********************** -->
+                <div class="dropdown dropdown-lg">
+
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span class="caret"></span></button>
+                    <div class="dropdown-menu dropdown-menu-right" role="menu" >
+                    	
+                    	<h4>Advanced Search</h4>
+
+                        <div class="form-group">
+                            <label class="col-sm-5 control-label">Exact Match:</label>
+                        	<div class="col-sm-3">
+                   				<input type='checkbox' name="is_exact_match" id="id_is_exact_match" class="form-control" {% if is_exact_match %} checked {%endif%}/>
+                        	</div>
+                    	</div>
+
+                        <div class="form-group">
+                            <label class="col-sm-5 control-label">Max Price:</label>
+                        	<div class="col-sm-3">
+                            	<input type="text" class="form-control" name="max_price" id="id_max_price" {% if max_price %} value="{{ max_price }}" {% endif %} placeholder="Max"> 
+                        	</div>
+                        	
+                    	</div>
+                    	<!--*****************  Internal Search Logo *********************** -->
+                    	<button type="submit" class="btn btn-default btn-block">Search :: <span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
+                	</div>
+                	<!--*****************  External Search Logo *********************** -->
+					<button type="submit" class="btn btn-default "><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
+
+            	</div>
+        	</div>
+    	</div>
+  	</div>
+</form>
 
 
 
