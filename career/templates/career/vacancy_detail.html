@@ -1,0 +1,96 @@
+{% extends "product/base.html" %}
+{% load static %}
+
+{% block title %}
+	Career
+{% endblock %}
+
+{% block content %}  
+
+
+  <!-- BANNER STRAT -->
+  <div class="banner career-banner"></div>
+  <!-- BANNER END --> 
+
+
+  <!-- Bread Crumb STRAT -->
+  <div class="container">
+    <div class="bread-crumb mtb-30 center-xs">
+      <div class="page-title">Career</div>
+      <div class="bread-crumb-inner right-side float-none-xs">
+        <ul>
+          <li><a href="/">Home</a><i class="fa fa-angle-right"></i></li>
+          <li><a href="/career/">Career</a><i class="fa fa-angle-right"></i></li>
+          <li>Jop Details</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <!-- Bread Crumb END --> 
+
+
+ <section class="pb-95">
+    <div class="container">
+
+              <div class="col-xs-12">
+                <div class="heading-part align-center">
+                    <h2 class="heading">{{ vacancy.title }}</h2>
+                </div>
+              </div>
+
+
+
+            <div class="row">
+              <div class="col-lg-10 col-md-8 col-sm-8 col-lg-offset-1 col-sm-offset-1">
+
+                <div class="payment-option-box mb-30">
+                  <div class="payment-option-box-inner ">
+                    <div class="payment-top-box">
+                      <div class="radio-box left-side">
+                        <label for="paypal">Job Summary ( Location: {{ vacancy.location.name }})</label>
+                      </div>
+                    </div>
+                    <p>{{ vacancy.job_summary|linebreaks }}</p>
+                  </div>
+                </div>
+
+                <div class="payment-option-box mb-30">
+                  <div class="payment-option-box-inner ">
+                    <div class="payment-top-box">
+                      <div class="radio-box left-side">
+                        <label for="paypal">Responsibilities </label>
+                      </div>
+                    </div>
+                    {{ vacancy.responsibilities|linebreaks}}
+                  </div>
+                </div>
+
+
+
+                <div class="payment-option-box mb-30">
+                  <div class="payment-option-box-inner ">
+                    <div class="payment-top-box">
+                      <div class="radio-box left-side">
+                        <label for="paypal">Requirements </label>
+                      </div>
+                    </div>
+                    <p>{{ vacancy.requirements|linebreaks}}</p>
+                  </div>
+                </div>
+
+
+                <div class="right-side float-none-xs">
+                  <a class="btn btn-black" href="new_resume/">Apply Now<span><i class="fa fa-angle-right"></i></span></a>
+                </div>
+              </div>
+            </div>
+
+
+
+
+
+    </div>
+</section>
+<!-- CONTENTS ENDS -->
+
+{% endblock %}

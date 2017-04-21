@@ -1,0 +1,191 @@
+{% extends "product/base.html" %}
+{% load static %}
+
+{% block title %}
+	New Resume
+{% endblock %}
+
+{% block content %}  
+
+  <!-- Bread Crumb STRAT -->
+  <div class="container">
+    <div class="bread-crumb mtb-30 center-xs">
+      <div class="page-title">Career</div>
+      <div class="bread-crumb-inner right-side float-none-xs">
+        <ul>
+          <li><a href="/">Home</a><i class="fa fa-angle-right"></i></li>
+          <li><a href="/career/">Career</a><i class="fa fa-angle-right"></i></li>
+          <li>Apply to Jop</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <!-- Bread Crumb END --> 
+
+<form action="" class="main-form full" enctype="multipart/form-data" method="POST" >
+{% csrf_token %}
+  <section class="checkout-section pb-95">
+    <div class="container">
+      <div class="row">
+		<div class="col-xs-12">
+         <div class="checkout-content" >
+
+
+            <div class="row">
+              <div class="col-xs-12">
+                <div class="heading-part align-center">
+                    <h2 class="heading">Please fill up your details</h2>
+                </div>
+              </div>
+            </div>
+ 
+
+
+            <div class="row">
+              <div class="col-lg-6 col-md-8 col-sm-8 col-lg-offset-3 col-sm-offset-2">
+
+
+                  <div class="mb-20">
+                    <div class="row ">
+                    	<div class="col-sm-12">
+                        	<div class="input-box">
+                    			{{form.non_field_errors}}{{form.resume_file.errors }} 
+                    		</div>
+                 		 </div>
+                    </div>
+                  </div>
+
+                  <div class="mb-20">
+                    <div class="row">
+
+
+
+                      <div class="col-sm-6">
+                        <div class="input-box {% if form.first_name.errors %} has-error {% endif %}">
+                        	<input  maxlength="150" 
+                        	name="first_name"  
+                        			id="id_first_name" 
+                        			type="text" 
+                        			{% if form.first_name.value %} value="{{form.first_name.value}}" {% endif %} 
+                        			placeholder="Full Name*" 
+                        			class="form-control "
+                        			/>
+                        </div>
+                      </div>
+                      <div class="col-sm-6">
+                        <div class="input-box {% if form.middle_name.errors %} has-error {% endif %}" >
+                          	<input 	id="id_middle_name" 
+                          			maxlength="150" 
+                          			name="middle_name" 
+                          			type="text" 
+                          			{% if form.middle_name.value %} value="{{form.middle_name.value}}" {% endif %} 
+                          			placeholder="Middle Name" 
+                          			class="form-control" 
+                          			/>
+                        </div>
+                      </div>
+                      <div class="col-sm-6">
+                        <div class="input-box {% if form.last_name.errors %} has-error{% endif %}">
+                          	<input id="id_last_name" 
+                          			maxlength="150" 
+                          			name="last_name" 
+                          			type="text" 
+                          			{% if form.last_name.value %} value="{{form.last_name.value}}" {% endif %} 
+                          			placeholder="Last Name*" 
+                          			class="form-control"
+                          			/>
+                        </div>
+                      </div>
+
+
+                      <div class="col-sm-6">
+                        <div class="input-box {% if form.email.errors %} has-error{% endif %}">
+                          	<input 	id="id_email" 
+                          			maxlength="50" 
+                          			name="email" 
+                          			type="email" 
+                          			{% if form.email.value %} value="{{form.email.value}}" {% endif %}
+                          			placeholder="Email Address*" 
+                          			class="form-control"
+                          			/>
+                        </div>
+                      </div>
+
+
+                      <div class="col-sm-6">
+                        <div class="input-box {% if form.phone.errors %} has-error{% endif %}">
+                        <input 	id="id_phone" 
+                        		maxlength="16" 
+                        		name="phone" 
+                        		placeholder="Phone*" 
+                        		type="text" 
+                        		{% if form.phone.value %} value="{{form.phone.value}}" {% endif %}
+                        		class="form-control"
+                        		/>
+                        <span>Tel. Format: +XXX YYY YYY</span>
+                        </div>
+                      </div>
+
+                      <div class="col-sm-6">
+                        <div class="input-box {% if form.birth_date.errors %} has-error{% endif %}">
+                          	 <input id="id_birth_date" 
+                          	 		maxlength="50" 
+                          	 		name="birth_date" 
+                          	 		type="text" 
+                          	 		{% if form.birth_date.value %} value="{{form.birth_date.value}}" {% endif %}
+                          	 		placeholder="Birth Date*" 
+                          	 		class="form-control" 
+                          	 		/>
+                          	 <span> YYYY-MM-DD</span>
+                        </div>
+                      </div>
+
+                      <div class="col-sm-6">
+                        <div class="input-box {% if form.nationality.errors %} has-error {% endif %}">
+                          <select 	id="id_nationality" name="nationality" class="form-control">
+                          		<option 
+                          			selected="selected"  
+                          			value="{% if form.nationality.value %} {{form.nationality.value}}  {% endif %}"
+                          			>
+                          			{% if form.nationality.value %} {{form.nationality.value}} {% else %} Select Nationality* {% endif %} 
+                          			</option>
+									{% include 'career/_countries_list.html' %}
+						   </select>
+						   <span> Please select Your Nationality</span>
+                        </div>
+                       </div>
+                    
+                      <div class="col-sm-6">
+                        <div class="input-box {% if form.resume_file.errors %} has-error {% endif %} ">
+                          	<input 	id="id_resume_file" 
+                          			name="resume_file" 
+                          			type="file" 
+                          			class="form-control"
+                          			/>
+                          <span>Please upload resume* (max 4mb using (pdf, doc, docx)</span>
+                        </div>
+                      </div>
+
+                      <div class="col-sm-12">
+                        <div class="input-box {% if form.comment.errors %} has-error {% endif %}">
+                          	<textarea cols="60" id="id_comment" 
+                          			maxlength="500" 
+                          			name="comment" rows="6" 
+                          			placeholder="Please Enter any comments" 
+                          			class="form-control"
+                          			>{% if form.comment.value %} {{form.comment.value}} {% endif %}</textarea>
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+
+                  <button type="submit" value="Submit" class="btn-black"  name="submit">Apply</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</form>
+
+{% endblock %}

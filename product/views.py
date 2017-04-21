@@ -11,8 +11,6 @@ import re
 
 
 
-
-
 def product_list(request, category_slug=None):
 		"""
 			For displying All products and Categories
@@ -36,11 +34,18 @@ def product_list(request, category_slug=None):
 		except EmptyPage:
 			# If page is out of range (e.g. 9999), deliver last page of results.
 			products = paginator.page(paginator.num_pages)
+
+		# Fixing the proplem f the reptitave Page attribute in URL
+		url_without_page = request.GET.copy()
+		if 'page' in url_without_page:
+			del url_without_page['page']
+
 		# FInal Context Variables to Send
 		context = {
 			'category': category,
 			'categories': categories,
-			'products': products
+			'products': products,
+			'url_without_page':url_without_page,
 		}
 		return render(request,'product/product_list.html', context)
 
@@ -62,9 +67,17 @@ def category_list(request):
 		except EmptyPage:
 			# If page is out of range (e.g. 9999), deliver last page of results.
 			categories = paginator.page(paginator.num_pages)
+
+		# Fixing the proplem f the reptitave Page attribute in URL
+		url_without_page = request.GET.copy()
+		if 'page' in url_without_page:
+			del url_without_page['page']
+		
 		# FInal Context Variables to Send
 		context = {
 			'categories': categories,
+			'url_without_page':url_without_page,
+
 		}
 		return render(request,'product/category_list.html', context)
 
@@ -77,12 +90,10 @@ def product_detail(request, id, slug):
 		"""
 		#for listing Categories on the lift side of the page
 		categories = Category.objects.all()
-
 		product = get_object_or_404(Product,id=id,slug=slug,is_published=True)
 		related_categories = product.categories.all()
 		# Related products List has the same category as the current prodcut without repeatition. 
 		related_products = Product.objects.filter(categories__in=list(related_categories)).exclude(id=product.id).distinct()
-		
 		# Final Context Variables to Send back
 		context = {
 			'categories': categories,
@@ -115,10 +126,11 @@ def search_product(request):
 				max_price = form.cleaned_data['max_price']
 				search_category_name = form.cleaned_data['search_category']
 				is_exact_match = form.cleaned_data['is_exact_match']
+				show_count = form.cleaned_data['show_count']
 	
-				print("******************  HI 3.5 --> max price = ",max_price,"  is Exact = ",is_exact_match," Category Name",search_category_name," ***********************")
 				if  search_category_name != "None" and search_category_name != "":
 					search_category_object = get_object_or_404(Category, name=search_category_name)
+				
 				if is_exact_match == False:
 					# Replacing Spaces with | to search on each word included separetly 
 					search_text = re.sub(r' +',"|",search_text)
@@ -140,7 +152,6 @@ def search_product(request):
 						else:
 							# Do Search based on SearchText + MAX
 							products = Product.objects.filter(name__iregex=r'('+search_text+r')').filter(is_published=True).filter(price__lte=max_price)
-
 				# if no SearchText is entered
 				else:
 					if search_category_object:
@@ -165,10 +176,15 @@ def search_product(request):
 					total_results = 0
 				else:
 					total_results = products.count()
-				print("******************  HI 6 ***********************")
 				
-				# handeling Paganation
-				paginator = Paginator(products, 3) 
+
+				# handeling Paganation & Items count per page
+				if show_count:
+					paginator = Paginator(products, show_count)
+				else:
+					 paginator = Paginator(products, 3)
+					 show_count = 3
+
 				page = request.GET.get('page')
 				try:
 					products = paginator.page(page)
@@ -178,7 +194,11 @@ def search_product(request):
 				except EmptyPage:
 					# If page is out of range (e.g. 9999), deliver last page of results.
 					products = paginator.page(paginator.num_pages)
-				
+
+				# Fixing the proplem f the reptitave Page attribute in URL
+				url_without_page = request.GET.copy()
+				if 'page' in url_without_page:
+					del url_without_page['page']
 
 				# Final Context Variables to Send back
 				context = {
@@ -189,9 +209,9 @@ def search_product(request):
 					'max_price':max_price,
 					'is_exact_match':is_exact_match,
 					'total_results':total_results,
-					#'form':form
+					'show_count':show_count,
+					'url_without_page':url_without_page,
 				}
-
 
 				return render(request,'product/search.html', context)
 			else:

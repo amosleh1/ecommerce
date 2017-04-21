@@ -1,157 +1,71 @@
 {% load staticfiles %}
 <!DOCTYPE html>
 <html>
-	<head>  
-		<title>{% block title %}Online Store{% endblock %}</title> 
-		<meta charset="utf-8" /> 
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
-		<!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">	-->
+<head>  
+	<!-- Basic Page Needs
+	  ================================================== -->
+	<meta charset="utf-8">
+	<title>{% block title %}Online Store{% endblock %}</title>
+	<!-- SEO Meta
+		================================================== -->
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="description" content="">
+	<meta name="keywords" content="">
+	<meta name="distribution" content="global">
+	<meta name="revisit-after" content="2 Days">
+	<meta name="robots" content="ALL">
+	<meta name="rating" content="8 YEARS">
+	<meta name="Language" content="en-us">
+	<meta name="GOOGLEBOT" content="NOARCHIVE">
+	<meta charset="utf-8" /> 
+	<!-- Mobile Specific Metas
+		================================================== -->
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<!-- CSS
+	  ================================================== -->
+	<link rel="stylesheet" type="text/css" href="{% static 'css/font-awesome.min.css' %}"/>
+	<link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.css' %}"/>
+	<link rel="stylesheet" type="text/css" href="{% static 'css/jquery-ui.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'css/owl.carousel.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'css/fotorama.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'css/magnific-popup.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'css/custom.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'css/responsive.css' %}">
+	<!-- JS
+	  ================================================== -->
+	 {% block javascript %}
+		<script type="text/javascript" src="{% static 'js/jquery-1.12.3.min.js'%}"></script>
+		<script type="text/javascript" src="{% static 'js/bootstrap.min.js'%}"></script>
+		<script type="text/javascript" src="{% static 'js/jquery-ui.js'%}"></script>
+		<script type="text/javascript" src="{% static 'js/fotorama.js'%}"></script>
+		<script type="text/javascript" src="{% static 'js/jquery.magnific-popup.js'%}"></script>
+		<script type="text/javascript" src="{% static 'js/owl.carousel.min.js'%}"></script>
+		<script type="text/javascript" src="{% static 'js/custom.js'%}"></script>
+	{% endblock javascript %}
 
-		
+	<link rel="shortcut icon" href="{% static 'img/favicon.png'%}">
+</head>
+<body> 
 
-		<style>
-		    /* Remove the navbar's default rounded borders and increase the bottom margin */ 
-		    .navbar {
-		      margin-bottom: 0px;
-		      border-radius: 0;
-		    }
-		    /* Remove the jumbotron's default bottom margin */ 
-		     .jumbotron {
-		      margin-bottom: 0;
-		     
-		    }
-		    /* Add a gray background color and some padding to the footer */
-		    footer {
-		      background-color: #f2f2f2;
-		      padding: 25px;
-		    }
+	<div class="se-pre-con"></div>
+	<div class="main"> 
+			<!-- HEADER SECTION 
+			  ================================================== -->
+			{% include 'product/_header.html' %}
+		   	<!-- CONTENT SECTION 
+			  ================================================== -->
+			{% block content %}
 
-
-
-		    /*  for Listing the products and Categories Lists  */
-			div.gallery {
-			    margin: 5px;
-			    border: 1px solid #ccc;
-			    float: left;
-			    width: 150px;
-			}
-
-			div.category_gallery {
-			    margin: 5px;
-			    border: 1px solid #ccc;
-			    float: left;
-			    width: 250px;
-			}
-
-			div.gallery:hover {
-			    border: 1px solid #777;
-			}
-
-			div.gallery img {
-			    width: 100%;
-			    height: auto;
-			}
-
-			div.desc {
-			    padding: 15px;
-			    text-align: center;
-			    background-color: #f2f2f2;
-			    height: auto;
-			    overflow: hidden;
-    			text-overflow: ellipsis;
-			}
-
-
-  		/* For the search window*/
-			.dropdown.dropdown-lg .dropdown-menu {
-			    margin-top: -1px;
-			    padding: 4px 15px;
-			}
-
-			.btn-group .btn {
-			    border-radius: 0;
-			    margin-left: -1px;
-			}
-			.form-horizontal .form-group {
-			    margin-left: 0;
-			    margin-right: 0;
-			}
-
-			@media screen and (min-width: 768px) {
-			    #boot-search-box {
-			        width: 400px;
-			        margin: 0 auto;
-			    }
-			    .dropdown.dropdown-lg {
-			        position: static !important;
-			    }
-			    .dropdown.dropdown-lg .dropdown-menu {
-			        min-width: 400px;
-			    }
-			}
-
-		</style>
-	</head>
-	<body> 
-
-		<div class="container">
-			<div class="jumbotron">
-			  <div class="container text-center">
-			    <h1><a href="/" class="logo">Online Store</a></h1>      
-			    <p>Mission, Vission & Values</p>
-				<!--
-				*****************  Search Input Related Section ***********************
-				-->
-	        	{% include 'product/_search_bar.html' %}
-
-			  </div>
-			</div>
-			<!--
-			*****************  Navigation Bar Related Section ***********************
-			-->
-			{% include 'product/_nav.html' %}
-
-		</div>
-
- 
-
-	    <div class="container">
-	        {% block content %}
-	        {% endblock content %}
-	    </div>
-
-
-	    {% block javascript %}
-
-	    <!--  <script src="{% static 'jquery-3.2.0.min.js' %}"></script> -->
-	    <!--     <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script> -->
-			<script src="//code.jquery.com/jquery-3.2.1.min.js"></script>
-    		<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-
-	        <!--  used or he Search Bar - For the Categories List -->
-			<script type="text/javascript">
-				$(document).ready(function(e){
-				    $('.search-panel .dropdown-menu').find('a').click(function(e) {
-				    	e.preventDefault();
-						var param = $(this).attr("href").replace("#","");
-						var concept = $(this).text();
-						$('.search-panel span#search_concept').text(concept);
-						$('.input-group #search_category').val(param);
-					});
-				});
-
-			</script>
-		{% endblock javascript %}
-
-	</body>
-
-
-	<div class="container">
-		<footer class="container-fluid text-center">
-	  		<p>Online Store Copyright</p>  
-		</footer>
+			{% endblock content %}
+			<!-- FOOTER SECTION 
+			  ================================================== -->
+			{% include 'product/_footer.html' %}
 	</div>
+
+
+
+
+</body>
 </html>
 
 

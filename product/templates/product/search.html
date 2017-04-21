@@ -9,107 +9,287 @@
 
 {% block content %}  
 	  
-	<div class="container">
-	  	<div class="row">
+
+  <!-- Bread Crumb STRAT -->
+  <div class="container">
+    <div class="bread-crumb mtb-30 center-xs">
+      <div class="page-title">Search Products</div>
+      <div class="bread-crumb-inner right-side float-none-xs">
+        <ul>
+          <li><a href="/">Home</a><i class="fa fa-angle-right"></i></li>
+          <li><span>Search</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <!-- Bread Crumb END --> 
 
 
-		    <div class="col-sm-8">
-		    	<h2>
-						Search Results
-				</h2>
+
+
+
+<form class="form-horizontal" role="form"  action="/search/" method="GET">
+{% csrf_token %}
+
+ <section class="pb-95">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-3 col-sm-4 mb-xs-30">	
+          <div class="sidebar-block">
+            <div class="sidebar-box filter-sidebar mb-40">
+              <span class="opener plus"></span>
+              <div class="main_title sidebar-title">
+                <h3><span>Advanced</span> Search</h3>
+              </div>
+              <div class="sidebar-contant">
+
+                <div class="filter-inner-box mb-20">
+                  <div class="inner-title">Search Product</div>
+                  <ul>
+	                  <li>
+	                    <div class="header_search_toggle mobile-view">
+	                        <div class="search-box">
+	                          <input type="text" name="search_query" placeholder="Search entire store here..." class="input-text" value="{{original_search_text}}" >
+	                         <!-- <button class="search-btn"></button> -->
+	                        </div>
+	                    </div>
+	                  </li>
+                  </ul>
+                </div>
+
+                <div class="filter-inner-box mb-20">
+                  <div class="inner-title">Price Max Value</div>
+                  <ul>
+	                  <li>
+	                    <div class="header_search_toggle mobile-view">
+	                        <div class="search-box">
+	                          <input type="text" class="input-text" name="max_price"  id="amount" {% if max_price %} value="{{ max_price }}" {% endif %} >
+	                        </div>
+	                    </div>
+	                  </li>
+                  </ul>
+                </div>
+
+       			<div class="filter-inner-box mb-20">
+       			<div class="inner-title">Search in Category</div>
+					<div class="input-box">
+                		<select name="search_category" id="id_search_category">
+                			<option value="None" {% if not category %} selected {% endif %}>All</option>
+						    {% for c in categories %} 
+		                  		<option value="{{ c.name }}" {% if category.slug == c.slug %} selected {% endif %}>{{ c.name|title|slice:":28" }} </option>
+							{% endfor %}
+                  		</select>
+                  	</div>
+                </div>
+
+                <div class="filter-inner-box mb-20">
+                  	<div class="inner-title">Exact Match</div>
+					<div class="check-box">
+                      <span>
+                      	<input type='checkbox' name="is_exact_match" id="id_is_exact_match" id="chk-billing-address" class="checkbox" {% if is_exact_match %} checked {%endif%}/>
+                      </span>
+                      <label for="is_exact_match">Search Based on Exact Match</label>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-black">Search :: <span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
+              </div>
+            </div>
+
+            <div class="sidebar-box listing-box mb-40">
+              <span class="opener plus"></span>
+              <div class="main_title sidebar-title">
+                <h3><span>All Categories</span></h3>
+              </div>
+              <div class="sidebar-contant">
+                <ul>
+				    {% for c in categories %} 
+                  		<li value="{{ c.name }}" {% if category.slug == c.slug %} selected {% endif %}><a href="{{ c.get_absolute_url }}">{{ c.name|title }} <span>(21)</span></a></li>
+					{% endfor %}
+                </ul>
+              </div>
+            </div>
+
+          </div>
+        </div>
+	 
+        
+        <div class="col-md-9 col-sm-8">
+          <div class="shorting mb-30">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="view">
+                  <div class="list-types grid active">
+                    <a href="{{request.get_full_path}}">
+                      <div class="grid-icon list-types-icon"></div>
+                    </a> 
+                  </div>
+                  <div class="list-types list ">
+                    <a href="{{request.get_full_path}}">
+                      <div class="list-icon list-types-icon"></div>
+                    </a> 
+                  </div>
+                </div>
+                <div class="short-by float-right-sm">
+                  <span>Sort By</span>
+                  <div class="select-item">
+                    <select>
+                      <option value="" selected="selected">Name (A to Z)</option>
+                      <option value="">Name(Z - A)</option>
+                      <option value="">price(low&gt;high)</option>
+                      <option value="">price(high &gt; low)</option>
+                      <option value="">rating(highest)</option>
+                      <option value="">rating(lowest)</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="show-item right-side float-left-sm">
+                  <span>Show</span>
+                  <div class="select-item">
+                    <select name="show_count" onchange="this.form.submit();">
+                      <option value="24" {% if show_count == 24%} selected="selected" {%endif%}>24</option>
+                      <option value="12" {% if show_count == 12%} selected="selected" {%endif%}>12</option>
+                      <option value="3" {% if show_count == 3 or show_count == None%} selected="selected" {%endif%}>3</option>
+                    </select>
+                  </div>
+                  <span>Per Page</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+
+
+
+          <div class="product-listing">
+            <div class="row mlr_-20">
+
 				{% if start_search == 'StartSearch'%}
 						<p >Please select a Search Criteria to find the product you need.</p>
 
 			    {% elif total_results == 0 or total_results == None %} 
-			    	<p >Your search "<strong>{{original_search_text}}</strong>" did not match any products.</p>
-			    	</br>
-					<p class="text-muted">Try something like </p>
+			    	<p >Your search "<strong>{{original_search_text}}</strong>" did not match any products. Try something like:</p>
 					<ul>	
-							<li class="text-muted">Using more general terms</li>
-							<li class="text-muted">Checking your spelling</li>
-							<li class="text-muted">Modify your serach filters</li>
+						<li class="text-muted">Checking your spelling</li>
+						<li class="text-muted">Modify your serach filters</li>
 					</ul>
 			    {% else %} 
 					<h4>
 						( {{ total_results }} Items Found)
 					</h4>
 					{% for product in products %}                   
-						<div class="gallery">
-							<a href="{{ product.get_absolute_url }}">    
-			   					<img src="{% if product.image %}{{ product.image.url }}{% else %}{% static "img/no_image.png" %}{% endif %}"  width="150" height="100" alt="Image">        
-			   				</a> 
-				   			<div class="desc"><a href="{{ product.get_absolute_url }}">{{ product.name|slice:":35" }}</a></div>
-					        <div class="desc">${{ product.price }}</div>
-						</div>
+			              <div class="col-md-3 col-xs-6 plr-20">
+			                <div class="product-item">
+			                  <div class="product-image">
+			                    <div class="sale-label"><span>Sale</span></div>
+									<a href="{{ product.get_absolute_url }}">    
+						   				<img src="{% if product.image %}{{ product.image.url }}{% else %}{% static "img/no_image.png" %}{% endif %}"   alt="Image">        
+						   			</a> 
+			                  </div>
+			                  <div class="product-item-details">
+			                    <div class="rating-summary-block">
+			                      <div title="53%" class="rating-result">
+			                        <span style="width:53%"></span>
+			                      </div>
+			                    </div>
+			                    <div class="product-item-name">
+			                      <a href="{{ product.get_absolute_url }}">{{ product.name|slice:":30" }}</a>
+			                    </div>
+			                    <div class="price-box">
+			                      <span class="price">SAR {{ product.price }}</span>
+			                      <del class="price old-price">SAR {{ product.price }}</del>
+			                    </div>
+			                  </div>
+			                  <div class="product-detail-inner">
+			                    <div class="detail-inner-left left-side">
+			                      <ul>
+			                        <li class="pro-cart-icon">
+			                          <form>
+			                            <button title="Add to Cart"><span></span>Add to Cart</button>
+			                          </form>
+			                        </li>
+			                      </ul>
+			                    </div>
+			                    <div class="detail-inner-left right-side">
+			                      <ul>
+			                        <li class="pro-wishlist-icon active"><a href="#"></a></li>
+			                        <li class="pro-compare-icon"><a href="#"></a></li>
+			                      </ul>
+			                    </div>
+			                  </div>
+			                </div>
+			              </div>
 					{% endfor %}
 				{% endif %}
-		    </div>
+            </div>
 
 
-			<div class="col-sm-3   ">
-				</br>
-	      		<div class="well">
-			      	<h3 align="center">Search Filter</h3>
-			        <form class="form-horizontal" role="form"  action="/search/" method="GET">
-			        	{% csrf_token %}
-				        <div class="form-group">
-				            <label for="id_search_query" class="control-label">Product Name</label>
-				            <input type="text" name="search_query" id="id_search_query" class="form-control" value="{{original_search_text}}"/>
-				        </div>
-				        <div class="form-group">
-				        	<label for="id_search_category" class="control-label">Category</label>
-				            <select class="form-control" name="search_category" id="id_search_category">
-				            	<option value="None" {% if not category %} selected {% endif %}>Any</option>
-				            	{% for c in categories %} 
-									<option value="{{ c.name }}" {% if category.slug == c.slug %} selected {% endif %}  > {{ c.name|title }}</option>
-								{% endfor %}
-				  			 </select>
-				        </div>
-				        <div class="form-group">
-				            <label for="pricefrom" class="control-label">Max Price</label>
-				            <div class="input-group">
-				              <div class="input-group-addon" id="basic-addon1">SAR</div>
-				              <input type="text" class="form-control" name="max_price" id="id_max_price" {% if max_price %} value="{{ max_price }}" {% endif %} aria-describedby="basic-addon1">
-				            </div>
-				        </div>
-				        <div class="form-group">
-                        	 <div class="input-group">
-                        	  	<label for="id_is_exact_match" class="control-label">Exact Match:</label>
-                   				<input type='checkbox' name="is_exact_match" id="id_is_exact_match" class="form-control" {% if is_exact_match %} checked {%endif%}/>
-                        	</div>
-				        </div>
-				        <button type="submit" class="btn btn-default btn-block">Search :: <span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
-			        </form>
-	      		</div>
-	    	</div>
-	  	</div>
+		{% if products.paginator.num_pages > 1 %}
+            <div class="row">
+              <div class="col-xs-12">
+                <div class="pagination-bar">
+                  <ul>
+                  	{% if products.has_previous %}
+                    	<li><a href="?{{url_without_page.urlencode}}&page={{ products.previous_page_number }}"><i class="fa fa-angle-left"></i></a></li>
+                    {% endif %}
+
+                    {% if products.number != 1 %}
+                  		<li  {% if products.number == 1%} class="active" {% endif %}  ><a href="?{{url_without_page.urlencode}}&page=1">1</a></li>
+					{% endif %}
+
+                    {% if products.number == 4 %}
+                    	<li><a href="?{{url_without_page.urlencode}}&page={{ products.number|add:-2 }}">{{ products.number|add:-2 }} </a></li>
+                    {% endif %}
+
+                    {% if products.number >= 5 %}
+                    	<li> ... </li>
+                    {% endif %}
+
+                    {% if products.number > 2 %}
+                    	<li><a href="?{{url_without_page.urlencode}}&page={{ products.number|add:-1 }}">{{ products.number|add:-1 }} </a></li>
+                    {% endif %}
+
+                    <li class="active"><a href="{{url_without_page.urlencode}}&page={{ products.number }}">{{ products.number }} </a></li>
+
+                    {% if products.number|add:1 < products.paginator.num_pages or products.number == 1%}
+                    	<li><a href="?{{url_without_page.urlencode}}&page={{ products.number|add:1 }}">{{ products.number|add:1 }} </a></li>
+                    {% endif %}
+
+                    {% if products.number|add:3 == products.paginator.num_pages %}
+                    	<li><a href="?{{url_without_page.urlencode}}&page={{ products.number|add:2 }}">{{ products.number|add:2 }}</a></li>
+                    {% endif %}
+
+                	{% if  products.number|add:4 <= products.paginator.num_pages %}
+                		<li>...</li>
+                	{% endif %}
+
+                	{% if products.paginator.num_pages >= 3 and products.paginator.num_pages != products.number %}
+                    	<li><a href="?{{url_without_page.urlencode}}&page={{ products.paginator.num_pages }}">{{products.paginator.num_pages}}</a></li>
+                    {% endif %}
+
+                    {% if products.has_next %}
+                    	<li><a href="?{{url_without_page.urlencode}}&page={{ products.next_page_number }}"><i class="fa fa-angle-right"></i></a></li>
+                 	{% endif %}
+                  </ul>
+                </div>
+              </div>
+            </div>
+		{% endif %}
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  </form>
+  <!-- CONTAINER END --> 
 
 
 
-
-	  <div class="row">
-	    <div class="col-sm-3">
-	    </div>
-			<div class="pagination">
-			    <span class="step-links">
-			        {% if products.has_previous %}
-			            <a href="{{request.get_full_path}}&page={{ products.previous_page_number }}">previous</a>
-			        {% endif %}
-
-			        <span class="current">
-			            Page {{ products.number }} of {{ products.paginator.num_pages }}.
-			        </span>
-
-			        {% if products.has_next %}
-			            <a href="{{request.get_full_path}}&page={{ products.next_page_number }}">next</a>
-			        {% endif %}
-			    </span>
-			</div>
-	    <div class="col-sm-9">
-
-		</div>
-
-	</div>
 {% endblock %}
 
 

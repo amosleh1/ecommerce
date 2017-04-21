@@ -19,6 +19,7 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^career/', include('career.urls', namespace='career')),
     url(r'^', include('product.urls', namespace='product')),
 ]
 if settings.DEBUG:

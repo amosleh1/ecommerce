@@ -1,0 +1,116 @@
+{% extends "product/base.html" %}
+{% load staticfiles %}
+
+
+{% block title %}  
+	Search
+{% endblock %}
+
+
+{% block content %}  
+	  
+	<div class="container">
+	  	<div class="row">
+
+
+		    <div class="col-sm-8">
+		    	<h2>
+						Search Results
+				</h2>
+				{% if start_search == 'StartSearch'%}
+						<p >Please select a Search Criteria to find the product you need.</p>
+
+			    {% elif total_results == 0 or total_results == None %} 
+			    	<p >Your search "<strong>{{original_search_text}}</strong>" did not match any products.</p>
+			    	</br>
+					<p class="text-muted">Try something like </p>
+					<ul>	
+							<li class="text-muted">Using more general terms</li>
+							<li class="text-muted">Checking your spelling</li>
+							<li class="text-muted">Modify your serach filters</li>
+					</ul>
+			    {% else %} 
+					<h4>
+						( {{ total_results }} Items Found)
+					</h4>
+					{% for product in products %}                   
+						<div class="gallery">
+							<a href="{{ product.get_absolute_url }}">    
+			   					<img src="{% if product.image %}{{ product.image.url }}{% else %}{% static "img/no_image.png" %}{% endif %}"  width="150" height="100" alt="Image">        
+			   				</a> 
+				   			<div class="desc"><a href="{{ product.get_absolute_url }}">{{ product.name|slice:":35" }}</a></div>
+					        <div class="desc">${{ product.price }}</div>
+						</div>
+					{% endfor %}
+				{% endif %}
+		    </div>
+
+
+			<div class="col-sm-3   ">
+				</br>
+	      		<div class="well">
+			      	<h3 align="center">Search Filter</h3>
+			        <form class="form-horizontal" role="form"  action="/search/" method="GET">
+			        	{% csrf_token %}
+				        <div class="form-group">
+				            <label for="id_search_query" class="control-label">Product Name</label>
+				            <input type="text" name="search_query" id="id_search_query" class="form-control" value="{{original_search_text}}"/>
+				        </div>
+				        <div class="form-group">
+				        	<label for="id_search_category" class="control-label">Category</label>
+				            <select class="form-control" name="search_category" id="id_search_category">
+				            	<option value="None" {% if not category %} selected {% endif %}>Any</option>
+				            	{% for c in categories %} 
+									<option value="{{ c.name }}" {% if category.slug == c.slug %} selected {% endif %}  > {{ c.name|title }}</option>
+								{% endfor %}
+				  			 </select>
+				        </div>
+				        <div class="form-group">
+				            <label for="pricefrom" class="control-label">Max Price</label>
+				            <div class="input-group">
+				              <div class="input-group-addon" id="basic-addon1">SAR</div>
+				              <input type="text" class="form-control" name="max_price" id="id_max_price" {% if max_price %} value="{{ max_price }}" {% endif %} aria-describedby="basic-addon1">
+				            </div>
+				        </div>
+				        <div class="form-group">
+                        	 <div class="input-group">
+                        	  	<label for="id_is_exact_match" class="control-label">Exact Match:</label>
+                   				<input type='checkbox' name="is_exact_match" id="id_is_exact_match" class="form-control" {% if is_exact_match %} checked {%endif%}/>
+                        	</div>
+				        </div>
+				        <button type="submit" class="btn btn-default btn-block">Search :: <span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
+			        </form>
+	      		</div>
+	    	</div>
+	  	</div>
+
+
+
+
+	  <div class="row">
+	    <div class="col-sm-3">
+	    </div>
+			<div class="pagination">
+			    <span class="step-links">
+			        {% if products.has_previous %}
+			            <a href="{{request.get_full_path}}&page={{ products.previous_page_number }}">previous</a>
+			        {% endif %}
+
+			        <span class="current">
+			            Page {{ products.number }} of {{ products.paginator.num_pages }}.
+			        </span>
+
+			        {% if products.has_next %}
+			            <a href="{{request.get_full_path}}&page={{ products.next_page_number }}">next</a>
+			        {% endif %}
+			    </span>
+			</div>
+	    <div class="col-sm-9">
+
+		</div>
+
+	</div>
+{% endblock %}
+
+
+

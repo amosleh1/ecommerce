@@ -1,0 +1,52 @@
+{% extends "product/base.html" %}
+{% load staticfiles %}
+
+
+{% block title %}  
+	Career
+{% endblock %}
+
+
+{% block content %}  
+	  
+	<div class="container">
+		
+		<h4>List of Careers & Job Opportunities</h4>
+
+		<div class="panel-group" align="center">
+			{% for vacancy in vacancies %}
+			    <div class="panel panel-primary text-left" style='width:80%' >
+			      <div class="panel-heading">
+			      	<a  href="{{ vacancy.get_absolute_url }}" class="panel-title" >
+			      		{{ vacancy.title }}
+			      	</a>
+			      	 
+			      </div>
+			      <div class="panel-body">
+			      		{{ vacancy.job_summary }}
+			      		<div class="pull-right"><a href="{{ vacancy.get_absolute_url }}" class="btn btn-primary" >Read More</a></div>
+			      </div>
+			    </div>
+			{% endfor %}
+		 </div>
+
+
+		{% if vacancies.paginator.num_pages > 1 %}
+			<ul class="pager ">
+				{% if vacancies.has_previous %}
+			  		<li class="previous"><a href="?page={{ vacancies.previous_page_number }}">&larr; Previous</a></li>
+			   {% endif %}
+			   	<li>Page {{ vacancies.number }} of {{ vacancies.paginator.num_pages }}.</li>
+			   {% if vacancies.has_next %}
+			  		<li class="next"><a href="?page={{ vacancies.next_page_number }}">next &rarr;</a></li>
+			   {% endif %}
+			</ul>
+		{% endif %}
+	
+
+
+	</div>
+{% endblock %}
+
+
+

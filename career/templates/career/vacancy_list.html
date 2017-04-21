@@ -1,0 +1,132 @@
+{% extends "product/base.html" %}
+{% load staticfiles %}
+
+
+{% block title %}  
+	Career
+{% endblock %}
+
+
+{% block content %}  
+	  
+
+  <!-- BANNER STRAT -->
+  <div class="banner career-banner"></div>
+  <!-- BANNER END --> 
+
+
+  <!-- Bread Crumb STRAT -->
+  <div class="container">
+    <div class="bread-crumb mtb-30 center-xs">
+      <div class="page-title">Career</div>
+      <div class="bread-crumb-inner right-side float-none-xs">
+        <ul>
+          <li><a href="/">Home</a><i class="fa fa-angle-right"></i></li>
+          <li><span>Career</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <!-- Bread Crumb END --> 
+
+ <!-- COntents STRAT -->
+ <section class="pb-95">
+    <div class="container">
+            <div class="row">
+              <div class="col-xs-12 mb-xs-30">
+                <div class="career-list-table commun-table">
+                  <div class="table-responsive">
+                    <table class="table">
+                      <thead>
+                        <tr>
+	                       	<th>Vacancy</th> 
+	                      	<th>Description</th>
+	                      	<th></th>
+	                        <th></th> 
+                        </tr>
+                      </thead>
+                      <tbody>
+
+	                      {% for vacancy in vacancies %}
+	                        <tr>
+	                          <td >
+	                            <a href="{{ vacancy.get_absolute_url }}" ><b>{{ vacancy.title }} </b></a>
+	                          </td>
+	                          <td>
+	                            <div>
+	                              <span class="info-deta">{{ vacancy.job_summary }}</span>
+	                            </div>
+	                          </td>
+	                          <td>
+	                  			<a href="{{ vacancy.get_absolute_url }}"  >Read More</a>
+	                          </td>
+	                          <td>
+	                  			<a href="{{ vacancy.id }}/{{ vacancy.slug }}/new_resume/"><button class="btn-black"  name="submit">Apply</button></a>
+	                          </td>
+	                        </tr>
+	                       {% endfor %}
+
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+		{% if vacancies.paginator.num_pages > 1 %}
+            <div class="row">
+              <div class="col-xs-12">
+                <div class="pagination-bar">
+                  <ul>
+                  	{% if vacancies.has_previous %}
+                    	<li><a href="?{{url_without_page.urlencode}}&page={{ vacancies.previous_page_number }}"><i class="fa fa-angle-left"></i></a></li>
+                    {% endif %}
+
+                    {% if vacancies.number != 1 %}
+                  		<li  {% if vacancies.number == 1%} class="active" {% endif %}  ><a href="?{{url_without_page.urlencode}}&page=1">1</a></li>
+					{% endif %}
+
+                    {% if vacancies.number == 4 %}
+                    	<li><a href="?{{url_without_page.urlencode}}&page={{ vacancies.number|add:-2 }}">{{ vacancies.number|add:-2 }} </a></li>
+                    {% endif %}
+
+                    {% if vacancies.number >= 5 %}
+                    	<li> ... </li>
+                    {% endif %}
+
+                    {% if vacancies.number > 2 %}
+                    	<li><a href="?{{url_without_page.urlencode}}&page={{ vacancies.number|add:-1 }}">{{ vacancies.number|add:-1 }} </a></li>
+                    {% endif %}
+
+                    <li class="active"><a href="{{url_without_page.urlencode}}&page={{ vacancies.number }}">{{ vacancies.number }} </a></li>
+
+                    {% if vacancies.number|add:1 < vacancies.paginator.num_pages or vacancies.number == 1%}
+                    	<li><a href="?{{url_without_page.urlencode}}&page={{ vacancies.number|add:1 }}">{{ vacancies.number|add:1 }} </a></li>
+                    {% endif %}
+
+                    {% if vacancies.number|add:3 == vacancies.paginator.num_pages %}
+                    	<li><a href="?{{url_without_page.urlencode}}&page={{ vacancies.number|add:2 }}">{{ vacancies.number|add:2 }}</a></li>
+                    {% endif %}
+
+                	{% if  vacancies.number|add:4 <= vacancies.paginator.num_pages %}
+                		<li>...</li>
+                	{% endif %}
+
+                	{% if vacancies.paginator.num_pages >= 3 and vacancies.paginator.num_pages != vacancies.number %}
+                    	<li><a href="?{{url_without_page.urlencode}}&page={{ vacancies.paginator.num_pages }}">{{vacancies.paginator.num_pages}}</a></li>
+                    {% endif %}
+
+                    {% if vacancies.has_next %}
+                    	<li><a href="?{{url_without_page.urlencode}}&page={{ vacancies.next_page_number }}"><i class="fa fa-angle-right"></i></a></li>
+                 	{% endif %}
+                  </ul>
+                </div>
+              </div>
+            </div>
+		{% endif %}
+
+    </div>
+</section>
+<!-- CONTENTS ENDS -->
+{% endblock %}
