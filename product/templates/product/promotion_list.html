@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+
+{% block title %}  
+	{% if category %}{{ category.name }}
+	{% else %}Products
+	{% endif %}
+{% endblock %}
+
+
+{% block content %}  
+	  
+
+
+
+
+  <!-- Bread Crumb STRAT -->
+  <div class="container">
+    <div class="bread-crumb mtb-30 center-xs">
+      <div class="page-title">
+    		Promotions
+      </div>
+      <div class="bread-crumb-inner right-side float-none-xs">
+        <ul>
+          <li><a href="/">Home</a><i class="fa fa-angle-right"></i></li>
+          <li><span>Promotion Products</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <!-- Bread Crumb END --> 
+
+
+
+
+
+
+  <section>
+
+{% for c in categories %} 
+    <div class="blog-main pt-95">
+      <div class="container">
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="heading-part align-center mb-40">
+              <h2 class="main_title">{{ c.name|title }}</h2>
+            </div>
+          </div>
+        </div>
+        <div class="owl-slider">
+          <div class="row blog_slider owlcarousel m-0">
+
+            {% for product in products %} 
+              {% if c in product.categories.all %}
+                <div class="item p-0">
+                  <div class="blog-item ">
+                    <div class="blog-media">
+                      <a href="{{ product.get_absolute_url }}">    
+                    <img src="{% if product.image %}{{ product.image.url }}{% else %}{% static "img/no_image.png" %}{% endif %}" style="width: 100%; height: auto; "  alt="Image">        
+                  </a> 
+                    </div>
+                    <div class="blog-detail">
+                      <div class="blog-detail-inner">
+                        <div class="blog-contant">
+
+                            {% if product.is_discounted %}
+                                <span class="price">SAR {{ product.discounted_price }}</span>
+                                <del class="price old-price">SAR {{ product.price }}</del>
+                             {% else %}
+                              <span class="price">SAR {{ product.price }}</span>
+                            {% endif %}
+
+                          <h4 class="blog-title"><a href="{{ product.get_absolute_url }}">{{ product.name|slice:":30" }}</a></h4>
+                          <div class="post-info">
+                            <ul>
+                              <li><a href="{{ product.get_absolute_url }}">Check Details...</a></li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              {% endif %}
+            {% endfor %}
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+{% endfor %}
+
+  </section>
+
+
+
+
+
+
+
+
+
+
+
+					       
+       
+
+
+
+
+
+
+ 
+  <!-- CONTAINER END --> 
+
+
+
+{% endblock %}
+
+
+

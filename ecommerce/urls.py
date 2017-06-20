@@ -20,6 +20,13 @@ from django.conf.urls.static import static
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^career/', include('career.urls', namespace='career')),
+    url(r'^contact/', include('contact.urls', namespace='contact')),
+    url(r'^about/', include('static_pages.urls', namespace='static_pages')),
+    url(r'^accounts/', include('allauth.urls')),
+    url(r'^profiles/', include('profiles.urls', namespace='profiles')),
+    url(r'^cart/', include('cart.urls', namespace='cart')),
+    url(r'^orders/', include('orders.urls', namespace='orders')),
+    url(r'^paypal/', include('paypal.standard.ipn.urls')),
     url(r'^', include('product.urls', namespace='product')),
 ]
 if settings.DEBUG:

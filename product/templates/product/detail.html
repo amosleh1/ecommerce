@@ -1,56 +1,191 @@
-{% extends "product/base.html" %}
+{% extends "base.html" %}
 {% load static %}
 {% block title %}
-	{% if category %}
-		{{ category.title }}
-	{% else %}Products
-	{% endif %}
+	Product Details
 {% endblock %}
 
 {% block content %}  
 
-	<div class="container">
-		<div class="row">
 
-		    <div class="col-sm-3">
-			      <ul class="nav nav-pills nav-stacked">
-				        Related Products: {% for r_product in related_products %} 
-				        	<li ><a href="{{ r_product.get_absolute_url }}">{{ r_product.name }}</a> </li>
-				        {% endfor %}
-			      </ul> 
-		    </div>
 
-		    <div class="col-sm-6">
+  <!-- Bread Crumb STRAT -->
+  <div class="container">
+    <div class="bread-crumb mtb-30 center-xs">
+      <div class="page-title">Product Details</div>
+      <div class="bread-crumb-inner right-side float-none-xs">
+        <ul>
+          <li><a href="/">Home</a><i class="fa fa-angle-right"></i></li>
+          <li><span>{{ product.name }}</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <!-- Bread Crumb END -->
 
-				<img src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'img/no_image.png' %}{% endif %}" >    
-				<h1>{{ product.name }}</h1>    
-				<p>
-					Related Category: {% for category in product.categories.all %} 
-						<a href="{{ category.get_absolute_url }}">{{ category.name }}</a>
-					{% endfor %}
-				</p>    
-				<p> Price: ${{ product.price }}</p>     
-				<p>{{ product.description|linebreaks }} </p> 
-				<p>{{ product.model}} </p>
-				<p>{{ product.slug}}</p>
-				{% if product.show_stock %}
-					<p>Stock Quantity: {{ product.stock}} </p>
-				{% endif %}
-				{% if product.is_discounted %}
- 					<p>Discounted Price: {{ product.discounted_price}} </p>
-					<p>Discount Expiration Date: {{ product.discount_expire}} </p>
-				{% endif %}
-				<p>Created Date: {{ product.created|date }}</p>
-				<p>Updated Date: {{ product.updated|date }}</p>
 
-			</div>  
+  
+  <!-- CONTAIN START -->
+  <section>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-5 col-sm-5 mb-xs-30">
+          <div class="fotorama" data-nav="thumbs" data-allowfullscreen="native">
+           <a href="{{ product.get_absolute_url }}"><img src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'img/no_image.png' %}{% endif %}"> </a>
+           <a href="#"><img src="images/2.jpg" alt="Pioneer"></a>
+           <a href="#"><img src="images/3.jpg" alt="Pioneer"></a>
+          </div>
+        </div>
+        <div class="col-md-7 col-sm-7">
+          <div class="row">
+            <div class="col-xs-12">
+              <div class="product-detail-main">
+                <div class="product-item-details">
+                  <h1 class="product-item-name">{{ product.name }}</h1>
+                  <div class="price-box">
+                    <span class="price">${% if product.is_discounted %} {{ product.discounted_price}} {% else %}{{ product.price }} {%endif%}</span>
+                    {% if product.is_discounted %}
+                    	<del class="price old-price">${{ product.price }}</del>
+                    {%endif%}
+                  </div>
 
-		    <div class="col-sm-3">
-		    </div>
+                  <div class="product-info-stock-sku">
+	                    <div>
+	                      <label>Availability: </label>
+	                      <span class="info-deta">In stock {% if product.stock%} ({{ product.stock }}) {% endif %}</span>
+	                    </div>
+	                 {% if product.model or product.model != '' %}
+		                    <div>
+		                      <label>SKU/Model: </label>
+		                      <span class="info-deta">{{ product.model}} </span>
+		                    </div>
+		              {% endif %}
+                  </div>
 
-		</div>
-	</div>
+                  <div class="product-info-stock-sku">
+	                    <div>
+	                      <label>Categroies Related: </label>
+	                      <span class="info-deta">
+	                      	{% for category in product.categories.all %} 
+								<a href="{{ category.get_absolute_url }}">{{ category.name }}, </a>
+							{% endfor %}
+	                      </span>
+	                    </div>
 
+                  </div>
+
+                  <p>{{ product.description|linebreaks }}</p>
+                <form action="{% url "cart:cart_add" product.id %}" method="post">
+                	{% csrf_token %}
+                	<input id="id_update" name="update" type="hidden" value="False" />
+                  <div class="mb-40">
+                    <div class="product-qty">
+                      <label for="qty">Qty:</label>
+                      <div class="custom-qty">
+                        <button onclick="var result = document.getElementById('qty'); var qty = result.value; if( !isNaN( qty ) &amp;&amp; qty &gt; 1 ) result.value--;return false;" class="reduced items" type="button"> <i class="fa fa-minus"></i> </button>
+                        <input type="text" class="input-text qty" title="Qty" value="1" maxlength="8" id="qty" name="quantity">
+                        <button onclick="var result = document.getElementById('qty'); var qty = result.value; if( !isNaN( qty )) result.value++;return false;" class="increase items" type="button"> <i class="fa fa-plus"></i> </button>
+                      </div>
+                    </div>
+                    <div class="bottom-detail cart-button">
+                      <ul>
+                        <li class="pro-cart-icon">
+                           <button type="submit" title="Add to Cart" class="btn-black"><span></span>Add to Cart</button>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+				</form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+{% if related_products|length > 0 %}
+
+  <div class="container">
+    <div class=" mtb-30 center-xs">
+	    <br/>
+			<hr/>
+		<br/>
+    </div>
+  </div>
+
+
+  <section class="pb-95">
+    <div class="container">
+      <div class="product-slider owl-slider">
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="heading-part align-center mb-40">
+              <h2 class="main_title">Related Products</h2>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="product-slider-main position-r">
+            <div class="owl-carousel pro_cat_slider">
+
+            	{% for r_product in related_products %} 
+	              <div class="item">
+	                <div class="product-item">
+	                  <div class="product-image">
+	                    {% if r_product.is_discounted %} <div class="sale-label"><span>Sale</span></div>{%endif%}
+	                    <a href="{{ r_product.get_absolute_url }}">
+	                      <img src="{% if r_product.image %}{{ r_product.image.url }}{% else %}{% static 'img/no_image.png' %}{% endif %}" >
+	                    </a>
+	                  </div>
+	                  <div class="product-item-details">
+	                    <div class="product-item-name">
+	                      <a href="product-page.html">{{ r_product.name }}</a>
+	                    </div>
+
+	                    <div class="price-box">
+                    		<span class="price">${% if r_product.is_discounted %} {{ r_product.discounted_price}} {% else %}{{ r_product.price }} {%endif%}</span>
+                    		{% if r_product.is_discounted %}
+                    			<del class="price old-price">${{ r_product.price }}</del>
+                    		{%endif%}
+                  		</div>
+
+	                  </div>
+	                  <div class="product-detail-inner">
+	                    <div class="detail-inner-left left-side">
+	                      <ul>
+	                        <li class="pro-cart-icon">
+	                          <form action="{% url "cart:cart_add" product.id %}" method="post">
+	                          	{% csrf_token %}
+                				<input id="id_update" name="update" type="hidden" value="False" />
+                				<input id="id_quantity" name="quantity" type="hidden" value="1" />
+	                            <button type="submit" title="Add to Cart"><span></span>Add to Cart</button>
+	                          </form>
+	                        </li>
+	                      </ul>
+	                    </div>
+	                  </div>
+	                </div>
+	              </div>
+	            {% endfor %}
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+ {% endif %}
+  <!-- CONTAINER END --> 			 
+		
+<!--
+				<form action="{% url "cart:cart_add" product.id %}" method="post">
+				  {{ cart_product_form }}
+				  {% csrf_token %}
+  				<input type="submit" value="Add to cart">
+  				</form>
+-->
 
 
 {% endblock %}

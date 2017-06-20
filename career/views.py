@@ -18,13 +18,13 @@ def vacancy_list(request):
 		paginator = Paginator(vacancies, 5) # Show 25 contacts per page
 		page = request.GET.get('page')
 		try:
-			vacancies = paginator.page(page)
+			page_list = paginator.page(page)
 		except PageNotAnInteger:
 			# If page is not an integer, deliver first page.
-			vacancies = paginator.page(1)
+			page_list = paginator.page(1)
 		except EmptyPage:
 			# If page is out of range (e.g. 9999), deliver last page of results.
-			vacancies = paginator.page(paginator.num_pages)
+			page_list = paginator.page(paginator.num_pages)
 
 		# Fixing the proplem f the reptitave Page attribute in URL
 		url_without_page = request.GET.copy()
@@ -33,7 +33,7 @@ def vacancy_list(request):
 
 		# FInal Context Variables to Send
 		context = {
-			'vacancies': vacancies,
+			'page_list': page_list,
 			'url_without_page':url_without_page,
 		}
 		return render(request,'career/vacancy_list.html', context)
@@ -86,7 +86,7 @@ def new_resume(request, id, slug):
 					return render(request, "career/resume_status.html", context)
 				else:
 					context = {
-						'message':"A resume from this email is already subitted to this Vacancy", 
+						'message':"A resume from this email is already submitted to this Vacancy", 
 					}
 					return render(request, "career/resume_status.html", context)
 		else:

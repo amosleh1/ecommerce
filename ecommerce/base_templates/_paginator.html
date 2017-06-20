@@ -1,0 +1,52 @@
+
+        {% if page_list.paginator.num_pages > 1 %}
+            <div class="row">
+              <div class="col-xs-12">
+                <div class="pagination-bar">
+                  <ul>
+                  	{% if page_list.has_previous %}
+                    	<li><a href="?{{url_without_page.urlencode}}&page={{ page_list.previous_page_number }}"><i class="fa fa-angle-left"></i></a></li>
+                    {% endif %}
+
+                    {% if page_list.number != 1 %}
+                  		<li  {% if page_list.number == 1%} class="active" {% endif %}  ><a href="?{{url_without_page.urlencode}}&page=1">1</a></li>
+					{% endif %}
+
+                    {% if page_list.number == 4 %}
+                    	<li><a href="?{{url_without_page.urlencode}}&page={{ page_list.number|add:-2 }}">{{ page_list.number|add:-2 }} </a></li>
+                    {% endif %}
+
+                    {% if page_list.number >= 5 %}
+                    	<li> ... </li>
+                    {% endif %}
+
+                    {% if page_list.number > 2 %}
+                    	<li><a href="?{{url_without_page.urlencode}}&page={{ page_list.number|add:-1 }}">{{ page_list.number|add:-1 }} </a></li>
+                    {% endif %}
+
+                    <li class="active"><a href="{{url_without_page.urlencode}}&page={{ page_list.number }}">{{ page_list.number }} </a></li>
+
+                    {% if page_list.number|add:1 < page_list.paginator.num_pages or page_list.number == 1%}
+                    	<li><a href="?{{url_without_page.urlencode}}&page={{ page_list.number|add:1 }}">{{ page_list.number|add:1 }} </a></li>
+                    {% endif %}
+
+                    {% if page_list.number|add:3 == page_list.paginator.num_pages %}
+                    	<li><a href="?{{url_without_page.urlencode}}&page={{ page_list.number|add:2 }}">{{ page_list.number|add:2 }}</a></li>
+                    {% endif %}
+
+                	{% if  page_list.number|add:4 <= page_list.paginator.num_pages %}
+                		<li>...</li>
+                	{% endif %}
+
+                	{% if page_list.paginator.num_pages >= 3 and page_list.paginator.num_pages != page_list.number %}
+                    	<li><a href="?{{url_without_page.urlencode}}&page={{ page_list.paginator.num_pages }}">{{page_list.paginator.num_pages}}</a></li>
+                    {% endif %}
+
+                    {% if page_list.has_next %}
+                    	<li><a href="?{{url_without_page.urlencode}}&page={{ page_list.next_page_number }}"><i class="fa fa-angle-right"></i></a></li>
+                 	{% endif %}
+                  </ul>
+                </div>
+              </div>
+            </div>
+		{% endif %}

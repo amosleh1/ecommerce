@@ -2,8 +2,6 @@ from django.contrib import admin
 from .models import Vacancy, Resume
 
 
-# Register your models here.
-
 @admin.register(Vacancy)
 class VacancyAdmin(admin.ModelAdmin):
 	fieldsets =[
@@ -17,6 +15,10 @@ class VacancyAdmin(admin.ModelAdmin):
 	list_display_links = ("title",)
 	list_filter = ("is_published",)
 	search_fields = ("title","location")
+
+
+
+
 
 @admin.register(Resume)
 class ResumeAdmin(admin.ModelAdmin):

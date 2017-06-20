@@ -1,0 +1,235 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+
+{% load static %}
+{% block title %}
+  Cart
+{% endblock %}
+
+{% block content %}
+
+
+  <!-- Bread Crumb STRAT -->
+  <div class="container">
+    <div class="bread-crumb mtb-30 center-xs">
+      <div class="page-title">Cart Details</div>
+      <div class="bread-crumb-inner right-side float-none-xs">
+        <ul>
+          <li><a href="index.html">Home</a><i class="fa fa-angle-right"></i></li>
+          <li><span>Shopping Cart</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <!-- Bread Crumb END -->
+  
+  <!-- CONTAIN START -->
+
+  {% if cart|length > 0 %}
+
+    <section class="pb-95">
+      <div class="container">
+
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="checkout-step mb-40">
+              <ul>
+                <li class="active"> 
+                  <a href="#">
+                    <div class="step">
+                      <div class="line"></div>
+                      <div class="circle">1</div>
+                    </div>
+                    <span>Shopping Cart</span>
+                  </a>
+                </li>
+                <li > 
+                  <a href="#">
+                    <div class="step">
+                      <div class="line"></div>
+                      <div class="circle">2</div>
+                    </div>
+                    <span>Order Overview</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#">
+                    <div class="step">
+                      <div class="line"></div>
+                      <div class="circle">3</div>
+                    </div>
+                    <span>Payment</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#">
+                    <div class="step">
+                      <div class="line"></div>
+                      <div class="circle">4</div>
+                    </div>
+                    <span>Order Complete</span>
+                  </a>
+                </li>
+              </ul>
+              <hr>
+            </div>
+          </div>
+        </div>
+
+
+
+        <div class="row">
+          <div class="col-xs-12 mb-xs-30">
+
+
+            <div class="cart-item-table commun-table">
+              <div class="table-responsive">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Product</th>
+                      <th>Product Name</th>
+                      <th>Unit Price</th>
+                      <th>Quantity</th>
+                      <th>Price</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                      {% for item in cart %}
+                        {% with product=item.product %}
+                        <tr>
+                          <td>
+                            <a href="product-page.html">
+                              <div class="product-image"><a href="{{ product.get_absolute_url }}"><img src="{% if product.image %}{{ product.image.url }}{% else %}{% static "img/no_image.png" %}{% endif %}"> </a></div>
+                            </a>
+                          </td>
+                          <td>
+                            <div class="product-title">
+                             <a href="{{ product.get_absolute_url }}"> {{ product.name }}</a>
+                            </div>
+                          </td>
+                          <td>
+                            <ul>
+                              <li>
+                                <div class="base-price price-box">
+                                  <span class="price">${{ item.price }}</span>
+                                </div>
+                              </li>
+                            </ul>
+                          </td>
+                          <td>
+                            <div class="input-box">
+                              <form action="{% url "cart:cart_add" product.id %}" method="post">
+                                {{ item.update_quantity_form.quantity }}
+                                {{ item.update_quantity_form.update }}
+                                <input type="submit" value="Update" class="btn btn-black">
+                                {% csrf_token %}
+                              </form>
+                            </div>
+                          </td>
+                          <td>
+                            <div class="total-price price-box">
+                              <span class="price">${{ item.total_price }}</span>
+                            </div>
+                          </td>
+                          <td>
+                            <a href="{% url "cart:cart_remove" product.id %}"><i title="Remove Item From Cart" data-id="100" class="fa fa-trash cart-remove-item"></i></a>
+                          </td>
+                        </tr>
+                        {% endwith %}
+                      {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="mtb-30">
+          <div class="row ">
+            <div class="col-lg-6 col-md-8 col-sm-8 col-lg-offset-3 col-sm-offset-2">
+              <div class="cart-total-table commun-table ">
+                <div class="table-responsive">
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th colspan="2">Cart Total</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>Item(s) Subtotal</td>
+                        <td>
+                          <div class="price-box">
+                            <span class="price">${{ cart.get_total_price }}</span>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Shipping</td>
+                        <td>
+                          <div class="price-box">
+                            <span class="price">$0.00</span>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td><b>Amount Payable</b></td>
+                        <td>
+                          <div class="price-box">
+                            <span class="price"><b>${{ cart.get_total_price }}</b></span>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <hr>
+        <div class="mb-30">
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="mt-30">
+                <a href="/" class="btn btn-black"><span><i class="fa fa-angle-left"></i></span>Continue Shopping</a>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="mt-30 right-side float-none-xs">
+                <a href="{% url 'orders:order_create' %}" class="btn btn-black">Proceed to order <span><i class="fa fa-angle-right"></i></span></a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+    </section>
+  {% else %}
+
+    <br/>
+      <div class="container">
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="heading-part align-center">
+              </br>
+                <h2 class="heading">Your cart is empty.</h2>
+                </br>
+            </div>
+          </div>
+        </div>
+      </div>
+    <br/>
+
+  {% endif %}
+  <!-- CONTAINER END --> 
+  }
+
+
+{% endblock %}

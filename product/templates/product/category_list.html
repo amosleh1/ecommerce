@@ -1,4 +1,4 @@
-{% extends "product/base.html" %}
+{% extends "base.html" %}
 {% load staticfiles %}
 
 
@@ -9,45 +9,60 @@
 
 {% block content %}  
 	  
-	<div class="container">
-	  <div class="container">
 
-			{% for category in categories %}                   
-				<div class="category_gallery">
-					<a href="{{ category.get_absolute_url }}">    
-	   					<img src="{% if category.image %}{{ category.image.url }}{% else %}{% static "img/no_image.png" %}{% endif %}"  width="240" height="190" alt="Image">        
-	   				</a> 
-		   			<div class="desc"><a href="{{ category.get_absolute_url }}">{{ category.name }}</a></div>
-			        <div class="desc" style="height: 100px;">{{ category.description }}</div>
-				</div>
-			{% endfor %}
+  <!-- Bread Crumb STRAT -->
+  <div class="container">
+    <div class="bread-crumb mtb-30 center-xs">
+      <div class="page-title">Categories</div>
+      <div class="bread-crumb-inner right-side float-none-xs">
+        <ul>
+          <li><a href="/">Home</a><i class="fa fa-angle-right"></i></li>
+          <li><span>Categories List</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <!-- Bread Crumb END --> 
+<br/>
+<br/>
 
-	  </div>
+  <!-- CONTAIN START -->
+  <section>
+    <div class="container">
+      <div class="sub-banner-block center-xs">
+        
+        <div class="row m-0">
+        {% for category in page_list %}
+	        	{% if forloop.counter|divisibleby:"3" %}
+	      			<div class="row m-0">
+	     		  {% endif %}
+			          <div class="col-sm-4 p-0">
+			            <div class="sub-banner sub-banner1 " style="visibility: visible; animation-name: zoomIn;">
+			              <a href="{{ category.get_absolute_url }}">
+			                <img src="{% if category.image %}{{ category.image.url }}{% else %}{% static "img/no_image.png" %}{% endif %}"   Image" style="width: auto; height: 420px; "> 
+			                <div class="sub-banner-detail">
+			                  <div class="sub-banner-title">{{ category.name|slice:":20" }}</div>
+			                  <div class="sub-banner-subtitle">Click to See all Products ({{category.products.count}})</div>
+			                </div>
+			              </a>
+			            </div>
+			          </div>
+	        	{% if forloop.counter|divisibleby:"3" %}
+	      			</div>
+	     		  {% endif %}
+		{% endfor %}
+        </div>
+        
+        {% include '_paginator.html' %}
+      </div>
+    </div>
+  </section>
 
 
-	  <div class="container">
-	    
-	    </div>
-			<div class="pagination">
-			    <span class="step-links">
-			        {% if categories.has_previous %}
-			            <a href="?page={{ categories.previous_page_number }}">previous</a>
-			        {% endif %}
+</br>
 
-			        <span class="current">
-			            Page {{ categories.number }} of {{ categories.paginator.num_pages }}.
-			        </span>
 
-			        {% if categories.has_next %}
-			            <a href="?page={{ categories.next_page_number }}">next</a>
-			        {% endif %}
-			    </span>
-			</div>
-	  
 
-		</div>
-
-	</div>
 {% endblock %}
 
 

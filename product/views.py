@@ -3,6 +3,7 @@ from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 #used for my customized created models
 from .models import Category, Product
+from cart.forms import CartAddProductForm
 
 from .forms import SearchForm
 #used for normalizing my search text
@@ -15,27 +16,44 @@ def product_list(request, category_slug=None):
 		"""
 			For displying All products and Categories
 		"""
-		#for listing Categories on the lift side of the page
-		categories = Category.objects.all()
-
+		#for listing Categories othat has at least one published product
+		categories = Category.objects.filter(products__is_published=True).distinct()
+		#List all products
+		page_list = Product.objects.filter(is_published=True)
+		show_count = None
 		category = None
-		products = Product.objects.filter(is_published=True)
+		
+
+		# If this is a GET request then process the Form data
+		if request.method == 'GET':
+			# Create a form instance and populate it with data from the request (binding):
+			form=SearchForm(request.GET)
+			if form.is_valid():
+				show_count = form.cleaned_data['show_count']
+			
+
+		# List Prodcuts based on Category
 		if category_slug:
 			category = get_object_or_404(Category, slug=category_slug)
-			products = Product.objects.filter(categories__in=[category],is_published=True)
-		# Pagination
-		paginator = Paginator(products, 4) # Show 25 contacts per page
+			page_list = Product.objects.filter(categories__in=[category],is_published=True)
+		
+		# handeling Paganation & Items count per page
+		if show_count:
+			paginator = Paginator(page_list, show_count)
+		else:
+			 paginator = Paginator(page_list, 10)
+			 show_count = 10
 		page = request.GET.get('page')
 		try:
-			products = paginator.page(page)
+			page_list = paginator.page(page)
 		except PageNotAnInteger:
 			# If page is not an integer, deliver first page.
-			products = paginator.page(1)
+			page_list = paginator.page(1)
 		except EmptyPage:
 			# If page is out of range (e.g. 9999), deliver last page of results.
-			products = paginator.page(paginator.num_pages)
-
-		# Fixing the proplem f the reptitave Page attribute in URL
+			page_list = paginator.page(paginator.num_pages)
+		
+		# Fixing the proplem of the reptitave Page attribute in URL when using the paging links
 		url_without_page = request.GET.copy()
 		if 'page' in url_without_page:
 			del url_without_page['page']
@@ -44,29 +62,49 @@ def product_list(request, category_slug=None):
 		context = {
 			'category': category,
 			'categories': categories,
-			'products': products,
+			'page_list': page_list,
 			'url_without_page':url_without_page,
+			'show_count':show_count,
 		}
 		return render(request,'product/product_list.html', context)
+
+
+def promotion_list(request, category_slug=None):
+		"""
+			For displying ONly Discounted and Featured products and Categories
+		"""
+		#for listing Categories on the lift side of the page
+		categories = Category.objects.filter(products__is_discounted=True).distinct()
+		products = Product.objects.filter(is_published=True).filter(is_discounted=True)
+		
+		# FInal Context Variables to Send
+		context = {
+			'categories': categories,
+			'products': products,
+		}
+		return render(request,'product/promotion_list.html', context)
+
+
 
 
 def category_list(request):
 		"""
 			For displying All Categories
 		"""
-		categories = Category.objects.all()
+		#for listing Categories othat has at least one published product
+		page_list = Category.objects.filter(products__is_published=True).distinct()
 
 		# Pagination
-		paginator = Paginator(categories, 8) # Show 25 contacts per page
+		paginator = Paginator(page_list, 9) # Show 25 contacts per page
 		page = request.GET.get('page')
 		try:
-			categories = paginator.page(page)
+			page_list = paginator.page(page)
 		except PageNotAnInteger:
 			# If page is not an integer, deliver first page.
-			categories = paginator.page(1)
+			page_list = paginator.page(1)
 		except EmptyPage:
 			# If page is out of range (e.g. 9999), deliver last page of results.
-			categories = paginator.page(paginator.num_pages)
+			page_list = paginator.page(paginator.num_pages)
 
 		# Fixing the proplem f the reptitave Page attribute in URL
 		url_without_page = request.GET.copy()
@@ -75,7 +113,7 @@ def category_list(request):
 		
 		# FInal Context Variables to Send
 		context = {
-			'categories': categories,
+			'page_list': page_list,
 			'url_without_page':url_without_page,
 
 		}
@@ -88,17 +126,20 @@ def product_detail(request, id, slug):
 		"""
 			For displying All information related to ONE Products and listing all categories
 		"""
-		#for listing Categories on the lift side of the page
-		categories = Category.objects.all()
+		#for listing Categories othat has at least one published product
+		categories = Category.objects.filter(products__is_published=True).distinct()
 		product = get_object_or_404(Product,id=id,slug=slug,is_published=True)
 		related_categories = product.categories.all()
 		# Related products List has the same category as the current prodcut without repeatition. 
 		related_products = Product.objects.filter(categories__in=list(related_categories)).exclude(id=product.id).distinct()
+		#intializing the cart form
+		cart_product_form = CartAddProductForm()
 		# Final Context Variables to Send back
 		context = {
 			'categories': categories,
 			'product': product,
-			'related_products':related_products
+			'related_products':related_products,
+			'cart_product_form':cart_product_form
 		}
 		return render(request,'product/detail.html', context)
 
@@ -108,8 +149,8 @@ def search_product(request):
 		"""
 		This View will relay on the request context valriables anc check all posibilities/criterias and search the DB
 		"""
-		#for listing Categories on the lift side of the page
-		categories = Category.objects.all()
+		#for listing Categories othat has at least one published product
+		categories = Category.objects.filter(products__is_published=True).distinct()
 
 		# If this is a GET request then process the Form data
 		if request.method == 'GET':
@@ -119,7 +160,8 @@ def search_product(request):
 			if form.is_valid():
 				# Maping the Search From to our variables and intialization 
 				search_category_object = None
-				products = None
+				# Represent the Products
+				page_list = None
 				total_results = 0
 				original_search_text = form.cleaned_data['search_query']
 				search_text = original_search_text.strip()
@@ -141,26 +183,26 @@ def search_product(request):
 					if search_category_object:
 						if max_price == None:
 							# Do Search based on SearchText + Category
-							products = Product.objects.filter(name__iregex=r'('+search_text+r')').filter(is_published=True).filter(categories__in=[search_category_object])
+							page_list = Product.objects.filter(name__iregex=r'('+search_text+r')').filter(is_published=True).filter(categories__in=[search_category_object])
 						else:
 							# Do Search based on SearchText + Category + Max
-							products = Product.objects.filter(name__iregex=r'('+search_text+r')').filter(is_published=True).filter(categories__in=[search_category_object]).filter(price__lte=max_price)
+							page_list = Product.objects.filter(name__iregex=r'('+search_text+r')').filter(is_published=True).filter(categories__in=[search_category_object]).filter(price__lte=max_price)
 					else:
 						if max_price == None:
 							# Do Search based on SearchText only
-							products = Product.objects.filter(name__iregex=r'('+search_text+r')').filter(is_published=True)
+							page_list = Product.objects.filter(name__iregex=r'('+search_text+r')').filter(is_published=True)
 						else:
 							# Do Search based on SearchText + MAX
-							products = Product.objects.filter(name__iregex=r'('+search_text+r')').filter(is_published=True).filter(price__lte=max_price)
+							page_list = Product.objects.filter(name__iregex=r'('+search_text+r')').filter(is_published=True).filter(price__lte=max_price)
 				# if no SearchText is entered
 				else:
 					if search_category_object:
 						if max_price == None:
 							# Do Search based on Category only
-							products = Product.objects.filter(categories__in=[search_category_object],is_published=True)
+							page_list = Product.objects.filter(categories__in=[search_category_object],is_published=True)
 						else:
 							# Do Search based on Category + MAX
-							products = Product.objects.filter(is_published=True).filter(categories__in=[search_category_object]).filter(price__lte=max_price)
+							page_list = Product.objects.filter(is_published=True).filter(categories__in=[search_category_object]).filter(price__lte=max_price)
 					else:
 						if max_price == None:
 							# Do Search based on NOTHING Selcted
@@ -169,33 +211,33 @@ def search_product(request):
 							return render(request,'product/search.html',context)
 						else: 
 							# Do Search based on MAX only
-							products = Product.objects.filter(is_published=True).filter(price__lte=max_price)
+							page_list = Product.objects.filter(is_published=True).filter(price__lte=max_price)
 
 				# Getting the number of results
-				if products == None:
+				if page_list == None:
 					total_results = 0
 				else:
-					total_results = products.count()
+					total_results = page_list.count()
 				
 
 				# handeling Paganation & Items count per page
 				if show_count:
-					paginator = Paginator(products, show_count)
+					paginator = Paginator(page_list, show_count)
 				else:
-					 paginator = Paginator(products, 3)
-					 show_count = 3
+					 paginator = Paginator(page_list, 10)
+					 show_count = 10
 
 				page = request.GET.get('page')
 				try:
-					products = paginator.page(page)
+					page_list = paginator.page(page)
 				except PageNotAnInteger:
 					# If page is not an integer, deliver first page.
-					products = paginator.page(1)
+					page_list = paginator.page(1)
 				except EmptyPage:
 					# If page is out of range (e.g. 9999), deliver last page of results.
-					products = paginator.page(paginator.num_pages)
+					page_list = paginator.page(paginator.num_pages)
 
-				# Fixing the proplem f the reptitave Page attribute in URL
+				# Fixing the proplem of the reptitave Page attribute in URL
 				url_without_page = request.GET.copy()
 				if 'page' in url_without_page:
 					del url_without_page['page']
@@ -203,7 +245,7 @@ def search_product(request):
 				# Final Context Variables to Send back
 				context = {
 					'categories': categories,
-					'products': products,
+					'page_list': page_list,
 					'category':search_category_object,
 					'original_search_text':original_search_text,
 					'max_price':max_price,

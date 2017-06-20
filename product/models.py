@@ -24,6 +24,7 @@ class Product(models.Model):
 	is_discounted = models.BooleanField(default=False, verbose_name="With Discount Offer?")
 	discount_expire = models.DateTimeField(blank=True, null=True, verbose_name="Last Date for Discount")
 	discounted_price = models.DecimalField(max_digits=10, decimal_places=2, blank=True,null=True,verbose_name="After Discount Price")
+	is_featured = models.BooleanField(default=False, verbose_name="Fetured Product?")
 	created = models.DateTimeField(auto_now_add=True)
 	updated = models.DateTimeField(auto_now=True)
 	categories = models.ManyToManyField("Category",related_name="products")
@@ -36,7 +37,7 @@ class Product(models.Model):
 		return reverse('product:product_detail',args=[self.id, self.slug])
 
 	def clean(self):
-		if self.is_discounted and (self.discounted_price is None or self.discounted_price == 0 or self.discount_expire is None or self.discount_expire < timezone.now()):
+		if self.is_discounted and (self.discounted_price is None or self.discounted_price > self.price):
 			raise ValidationError(_('Discount Price is not set correctty although Discount option is checked'))
 
 	def save(self, *args, **kwargs):

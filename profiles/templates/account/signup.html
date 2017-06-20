@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+
+{% load static %}
+{% block title %}
+	{% trans "Sign Up" %}
+{% endblock %}
+
+{% block content %}
+
+
+
+<br/>
+  <div class="container">
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="heading-part align-center">
+          </br>
+            <h1 class="heading">{% trans "Sign Up" %}</h1>
+            </br>
+        </div>
+      </div>
+    </div>
+  </div>
+<br/>
+
+
+<form  class="main-form full" id="signup_form" method="post" action="{% url 'account_signup' %}">
+{% csrf_token %}
+  <section class="checkout-section pb-95">
+    <div class="container">
+      	<div class="row">
+			<div class="col-xs-12">
+         		<div class="checkout-content" >
+
+		            <div class="row">
+		              <div class="col-xs-12">
+		                <div class="heading-part align-center">
+		                    <h2 class="heading">Please fill up your details</h2>
+		                    <p>{% blocktrans %}Already have an account? Then please <a href="{{ login_url }}">sign in</a>.{% endblocktrans %}</p>
+		                </div>
+		              </div>
+		            </div>
+
+		            <div class="row">
+		              <div class="col-lg-6 col-md-8 col-sm-8 col-lg-offset-3 col-sm-offset-2">
+		              	<div class="col-sm-12">
+		                    <div class="input-box">
+		                      	
+		                      	{{ form.as_p }}
+
+								{% if redirect_field_value %}
+								<input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+								{% endif %}
+								<button type="submit" class="btn-black" >{% trans "Sign Up" %} &raquo;</button>
+
+		                    </div>
+		              	</div>
+		              </div>
+		            </div>
+
+	      		</div>
+        	</div>
+      	</div>
+    </div>
+  </section>
+</form>
+
+{% endblock %}

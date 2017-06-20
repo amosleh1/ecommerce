@@ -1,0 +1,76 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+<head>  
+	<!-- Basic Page Needs
+	  ================================================== -->
+	<meta charset="utf-8">
+	<title>{% block title %}Online Store{% endblock %}</title>
+	<!-- SEO Meta
+		================================================== -->
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="description" content="">
+	<meta name="keywords" content="">
+	<meta name="distribution" content="global">
+	<meta name="revisit-after" content="2 Days">
+	<meta name="robots" content="ALL">
+	<meta name="rating" content="8 YEARS">
+	<meta name="Language" content="en-us">
+	<meta name="GOOGLEBOT" content="NOARCHIVE">
+	<meta charset="utf-8" /> 
+	<!-- Mobile Specific Metas
+		================================================== -->
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<!-- CSS
+	  ================================================== -->
+	<link rel="stylesheet" type="text/css" href="{% static 'css/font-awesome.min.css' %}"/>
+	<link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.css' %}"/>
+	<link rel="stylesheet" type="text/css" href="{% static 'css/jquery-ui.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'css/owl.carousel.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'css/fotorama.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'css/magnific-popup.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'css/custom.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'css/responsive.css' %}">
+	<!-- JS
+	  ================================================== -->
+	 {% block javascript %}
+		<script type="text/javascript" src="{% static 'js/jquery-1.12.3.min.js'%}"></script>
+		<script type="text/javascript" src="{% static 'js/bootstrap.min.js'%}"></script>
+		<script type="text/javascript" src="{% static 'js/jquery-ui.js'%}"></script>
+		<script type="text/javascript" src="{% static 'js/fotorama.js'%}"></script>
+		<script type="text/javascript" src="{% static 'js/jquery.magnific-popup.js'%}"></script>
+		<script type="text/javascript" src="{% static 'js/owl.carousel.min.js'%}"></script>
+		<script type="text/javascript" src="{% static 'js/custom.js'%}"></script>
+	{% endblock javascript %}
+
+	<link rel="shortcut icon" href="{% static 'img/favicon.png'%}">
+</head>
+<body> 
+
+	<div class="se-pre-con"></div>
+	<div class="main"> 
+			<!-- HEADER SECTION 
+			  ================================================== -->
+			{% include '_header.html' %}
+		   	<!-- CONTENT SECTION 
+			  ================================================== -->
+			{% block content %}
+
+			{% endblock content %}
+			<!-- FOOTER SECTION 
+			  ================================================== -->
+			{% include '_footer.html' %}
+	</div>
+
+
+
+
+</body>
+</html>
+
+
+
+
+
+
+

@@ -1124,6 +1124,11 @@ header {
     -o-transform: perspective(1300px) rotateY(0deg);
 }
 
+
+.nav  li.level .active {
+    color:  #ffee00
+}
+
 .megamenu-inner-top {
     display: inline-block;
     width: 100%;
@@ -1288,7 +1293,13 @@ _______________________________________________________*/
 }
 
 .career-banner {
-    background: url(../img/career-1.jpg) no-repeat scroll center center;
+    background: url(../img/career-1-big.jpg) no-repeat scroll center center;
+    padding: 118px 0;
+}
+
+
+.contact-banner {
+    background: url(../img/contact-2-big.jpg) no-repeat scroll center center;
     padding: 118px 0;
 }
 
@@ -1503,6 +1514,24 @@ _______________________________________________________*/
     text-transform: uppercase;
     bottom: 0px;
     z-index: 1;
+    text-align: center;
+}
+
+
+.featured-label {
+    background: #f95200;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 900;
+    line-height: 12px;
+    padding: 6px 10px;
+    position: absolute;
+    left: 0px;
+    right:0px;
+    text-transform: uppercase;
+    top: 0px;
+    z-index: 1;
+    text-align: center;
 }
 
 .product-detail-inner {
@@ -1536,8 +1565,13 @@ _______________________________________________________*/
     margin-top: 0;
 }
 
-.shop-list-view:hover .product-item-name a, .product-item:hover .product-item-name a, .special-products-block:hover .product-item-name a, .sidebar-contant ul li:hover .pro-detail-info a {
+.shop-list-view:hover .product-item-name a, .product-item:hover .product-item-name a, .special-products-block:hover .product-item-name a, .sidebar-contant ul li:hover .pro-detail-info a{
     color: #2a2931;
+}
+
+.sidebar-contant ul li.active a {
+    color: #2a2931;
+    font-weight: bold;
 }
 
 .product-item-details .price-box {

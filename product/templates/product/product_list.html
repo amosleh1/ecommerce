@@ -1,4 +1,4 @@
-{% extends "product/base.html" %}
+{% extends "base.html" %}
 {% load staticfiles %}
 
 
@@ -11,66 +11,183 @@
 
 {% block content %}  
 	  
-	<div class="container">
-	  <div class="row">
-
-	    <nav class="col-sm-2">
-	      <h3>Categories</h3> 
-	      <ul class="nav nav-pills nav-stacked" >
-	        <li {% if not category %} class="active"{% endif %}><a href="{% url "product:product_list" %}">All</a> </li>
-		        {% for c in categories %} 
-		        	<li  {% if category.slug == c.slug %} class="active" {% endif %}   ><a href="{{ c.get_absolute_url }}">{{ c.name|title }}</a></li>
-		        {% endfor %}
-	      </ul>
-	    </nav>
 
 
-	    <div class="col-sm-9">
-
-			<h2>
-				{% if category %}
-					{{ category.name }}
-				{% else %}All Products
-				{% endif %}
-			</h2>
-
-			{% for product in products %}                   
-				<div class="gallery">
-					<a href="{{ product.get_absolute_url }}">    
-	   					<img src="{% if product.image %}{{ product.image.url }}{% else %}{% static "img/no_image.png" %}{% endif %}"  width="300" height="200" alt="Image">        
-	   				</a> 
-		   			<div class="desc"><a href="{{ product.get_absolute_url }}">{{ product.name|slice:":35" }}</a></div>
-			        <div class="desc">${{ product.price }}</div>
-				</div>
-			{% endfor %}
-	    </div>
-
-	  </div>
 
 
-	  <div class="row">
-	    <div class="col-sm-3">
-	    </div>
-			<div class="pagination">
-			    <span class="step-links">
-			        {% if products.has_previous %}
-			            <a href="?page={{ products.previous_page_number }}">previous</a>
-			        {% endif %}
+  <!-- Bread Crumb STRAT -->
+  <div class="container">
+    <div class="bread-crumb mtb-30 center-xs">
+      <div class="page-title">
+		{% if category %}{{ category.name }} Products
+		{% else %} All Products
+		{% endif %}
+      </div>
+      <div class="bread-crumb-inner right-side float-none-xs">
+        <ul>
+          <li><a href="/">Home</a><i class="fa fa-angle-right"></i></li>
+          <li><span>Products</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <!-- Bread Crumb END --> 
 
-			        <span class="current">
-			            Page {{ products.number }} of {{ products.paginator.num_pages }}.
-			        </span>
 
-			        {% if products.has_next %}
-			            <a href="?page={{ products.next_page_number }}">next</a>
-			        {% endif %}
-			    </span>
-			</div>
-	    <div class="col-sm-9">
 
-		</div>
 
-	</div>
+ <section class="pb-95">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-3 col-sm-4 mb-xs-30">	
+          <div class="sidebar-block">
+
+			<form class="form-horizontal" role="form"  action="/search/" method="GET">
+			{% csrf_token %}
+	            <div class="sidebar-box mb-40">
+	              <form>
+	                <div class="search-box">
+	                  <input type="text" name="search_query" placeholder="Search entire store here..." class="input-text" value="{{original_search_text}}" >
+	                  <button type="submit" class="search-btn"></button>
+	                </div>
+	              </form>
+	            </div>
+			</form>
+
+            <div class="sidebar-box listing-box mb-40">
+              <span class="opener plus"></span>
+              <div class="main_title sidebar-title">
+                <h3><span>All Categories</span></h3>
+              </div>
+              <div class="sidebar-contant">
+                <ul>
+                	<li {% if not category %} class="active" {% endif %}><a href="{% url "product:product_list" %}?show_count={{show_count}}">All</a> </li>
+				          {% for c in categories %} 
+                  		<li  {% if category.slug == c.slug %} class="active" {% endif %}><a  href="{{ c.get_absolute_url }}?show_count={{show_count}}">{{ c.name|title }} <span>({{c.page_list.count}})</span></a></li>
+					        {% endfor %}
+                </ul>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+
+
+        <div class="col-md-9 col-sm-8">
+
+		<form class="form-horizontal" role="form"  action="" method="GET">
+		{% csrf_token %}
+          <div class="shorting mb-30">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="view">
+                  <div class="list-types grid active">
+                    <a href="{{request.get_full_path}}">
+                      <div class="grid-icon list-types-icon"></div>
+                    </a> 
+                  </div>
+                  <div class="list-types list ">
+                    <a href="{{request.get_full_path}}">
+                      <div class="list-icon list-types-icon"></div>
+                    </a> 
+                  </div>
+                </div>
+                <div class="short-by float-right-sm">
+                  <span>Sort By</span>
+                  <div class="select-item">
+                    <select name="sort_list" onchange="this.form.submit();">
+                      <option value="by_name_desc" selected="selected">Name (A to Z)</option>
+                      <option value="by_name_asc">Name(Z - A)</option>
+                      <option value="by_price_desc">price(low&gt;high)</option>
+                      <option value="by_price_asc">price(high &gt; low)</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="show-item right-side float-left-sm">
+                  <span>Show</span>
+                  <div class="select-item">
+                    <select name="show_count" onchange="this.form.submit();">
+                      <option value="30" {% if show_count == 30%} selected="selected" {%endif%}>30</option>
+                      <option value="20" {% if show_count == 20%} selected="selected" {%endif%}>20</option>
+                      <option value="10" {% if show_count == 10 or show_count == None%} selected="selected" {%endif%}>10</option>
+                    </select>
+                  </div>
+                  <span>Per Page</span>
+                </div>
+              </div>
+            </div>
+          </div>
+      	</form>
+
+
+          <div class="product-listing">
+            <div class="row mlr_-20">
+      					{% for product in page_list %}                   
+			              <div class="col-md-4 col-xs-6 plr-20">
+			                <div class="product-item">
+			                  <div class="product-image">
+			                  	{% if product.is_discounted %}
+			                    	<div class="sale-label"><span>Sale</span></div>
+			                    {% endif %}
+			               		{% if product.is_featured %}
+			                    	<div class="featured-label"><span>Featured</span></div>
+			                    {% endif %}
+								<a href="{{ product.get_absolute_url }}">    
+					   				<img src="{% if product.image %}{{ product.image.url }}{% else %}{% static "img/no_image.png" %}{% endif %}" Image" style="width: auto; height: 350px; "  alt="Image">        
+					   			</a> 
+			                  </div>
+			                  <div class="product-item-details">
+			                    <div class="product-item-name">
+			                      <a href="{{ product.get_absolute_url }}">{{ product.name|slice:":30" }}</a>
+			                    </div>
+			                    <div class="price-box">
+			                    {% if product.is_discounted %}
+			                      	<span class="price">SAR {{ product.discounted_price }}</span>
+			                      	<del class="price old-price">SAR {{ product.price }}</del>
+			                     {% else %}
+			                    	<span class="price">SAR {{ product.price }}</span>
+			                    {% endif %}
+			                    </div>
+			                  </div>
+			                  <div class="product-detail-inner">
+			                    <div class="detail-inner-left left-side">
+			                      <ul>
+			                        <li class="pro-cart-icon">
+			                          <form action="{% url "cart:cart_add" product.id %}" method="post">
+                                  {% csrf_token %}
+                                  <input id="id_update" name="update" type="hidden" value="False" />
+                                  <input id="id_quantity" name="quantity" type="hidden" value="1" />
+			                            <button  type="submit" title="Add to Cart"><span></span>Add to Cart</button>
+			                          </form>
+			                        </li>
+			                      </ul>
+			                    </div>
+			                    <div class="detail-inner-left right-side">
+			                      <ul>
+			                        <li class="pro-wishlist-icon active"><a href="#"></a></li>
+			                        <li class="pro-compare-icon"><a href="#"></a></li>
+			                      </ul>
+			                    </div>
+			                  </div>
+			                </div>
+			              </div>
+					{% endfor %}
+            </div>
+
+            {% include '_paginator.html' %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+ 
+  <!-- CONTAINER END --> 
+
+
+
 {% endblock %}
 
 

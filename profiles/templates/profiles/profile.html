@@ -1,0 +1,334 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+
+{% load static %}
+{% block title %}
+  User Profile
+{% endblock %}
+
+{% block content %}
+
+
+  <!-- Bread Crumb STRAT -->
+  <div class="container">
+    <div class="bread-crumb mtb-30 center-xs">
+      <div class="page-title">Profile Details</div>
+      <div class="bread-crumb-inner right-side float-none-xs">
+        <ul>
+          <li><a>Home</a><i class="fa fa-angle-right"></i></li>
+          <li><a>Profile</a><i class="fa fa-angle-right"></i></li>
+          <li>Details</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <!-- Bread Crumb END --> 
+  
+
+
+  <!-- CONTAIN START -->
+  <section class="checkout-section pb-95">
+    <div class="container">
+      <div class="row">
+
+
+
+        <div class="col-md-3 col-sm-4">
+          <div class="account-sidebar account-tab mb-xs-30">
+            <div class="tab-title-bg">
+              <div class="heading-part">
+                <div class="sub-title"><span></span> My Account</div>
+              </div>
+            </div>
+            <div class="account-tab-inner">
+              <ul class="account-tab-stap">
+                <li id="step1" class="active">
+                  <a href="javascript:void(0)">My Dashboard<i class="fa fa-angle-right"></i>
+                  </a>
+                </li>
+                <li id="step2">
+                  <a href="javascript:void(0)">Account Details<i class="fa fa-angle-right"></i>
+                  </a>
+                </li>
+                <li id="step3">
+                  <a href="javascript:void(0)">My Completed Order List<i class="fa fa-angle-right"></i>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- ***********************  My Dashboard Section ************************ --> 
+        <div class="col-md-9 col-sm-8">
+          <div id="data-step1" class="account-content" data-temp="tabdata">
+            <div class="row">
+              <div class="col-xs-12">
+                <div class="heading-part heading-bg mb-30">
+                  <a href="{% url 'account_change_password'%}" class="right-side"><button class="btn-black"  >Modify Password</button></a>
+                  <h2 class="heading m-0">Profile Dashboard</h2>
+                </div>
+              </div>
+            </div>
+            <div class="mb-30">
+              <div class="row">
+                <div class="col-xs-12">
+                  <div class="heading-part">
+                    <h3 class="sub-heading">Hello, {{ user.first_name|upper }} ({{ user.completion_level }}%)</h3>
+                  </div>
+                  <p>Subscribe to the Print Doodles mailing list to receive updates on new product, special offers and other discount information.<a class="account-link" id="subscribelink" href="#">Click Here</a></p>
+                </div>
+              </div>
+            </div>
+            <div class="m-0">
+              <div class="row">
+
+                <div class="col-sm-6">
+                  <div class="cart-total-table address-box commun-table">
+                    <div class="table-responsive">
+                      <table class="table">
+                        <thead>
+                          <tr>
+                            <th>Full Name</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>
+                              <ul>
+                                <li class="inner-heading">
+                                  <p>{{ user.first_name|upper }} {{ user.last_name|upper }}</p>
+                                </li>
+                              </ul>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-sm-6">
+                  <div class="cart-total-table address-box commun-table">
+                    <div class="table-responsive">
+                      <table class="table">
+                        <thead>
+                          <tr>
+                            <th>Email Address</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>
+                              <ul>
+                                <li class="inner-heading">
+                                  <p>{{ user.email }} ({% if user.email_is_verified %}Verfied {% else %} Not Verfied{% endif %})</p>
+                                </li>
+                              </ul>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <!-- ***********************  Account Details Section ************************ --> 
+        <form action="" class="main-form full" method="POST" >
+          {% csrf_token %}
+          <div id="data-step2" class="account-content" data-temp="tabdata" style="display:none">
+            <div class="row">
+              <div class="col-xs-12">
+                <div class="heading-part heading-bg mb-30">
+                  <h2 class="heading m-0">Account Details</h2>
+                </div>
+              </div>
+            </div>
+
+
+            <div class="row">
+              <div class="col-xs-12">
+                <div class="heading-part align-center">
+                    {{form.non_field_errors}}
+                </div>
+              </div>
+            </div>
+
+            <div class="m-0">
+                <div class="">
+                  <div class="row">
+
+                    <div class="col-sm-6">
+                      <div class="input-box {% if form.first_name.errors %} has-error {% endif %}">
+                        <input  maxlength="150" 
+                          name="first_name"  
+                              id="id_first_name" 
+                              type="text" 
+                               value="{{user.first_name}}"  
+                              placeholder="First Name*" 
+                              class="form-control "
+                              />
+                        <span class='error'>{{  form.first_name.errors }}</span>
+                      </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                      <div class="input-box {% if form.last_name.errors %} has-error {% endif %}">
+                        <input  maxlength="150" 
+                          name="last_name"  
+                              id="id_first_name" 
+                              type="text" 
+                               value="{{user.last_name}}"  
+                              placeholder="Last Name*" 
+                              class="form-control "
+                              />
+                        <span>{{  form.last_name.errors }}</span>
+                      </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                      <div class="input-box {% if form.email.errors %} has-error{% endif %}">
+                            <input  id="id_email" 
+                                maxlength="50" 
+                                name="email" 
+                                type="email" 
+                                value="{{user.email}}" 
+                                placeholder="Email Address*" 
+                                class="form-control"
+                                />
+                            <span>{{  form.email.errors }}</span>
+                      </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <div class="input-box {% if form.phone.errors %} has-error{% endif %}">
+                        <input  id="id_phone" 
+                            maxlength="16" 
+                            name="phone" 
+                            placeholder="Phone Number" 
+                            type="text" 
+                            {% if user.phone %} value="{{user.phone}}" {% endif %}
+                            class="form-control"
+                            />
+                        <span>Tel. Format: +XXX YYY YYY</span>
+                        <span>{{  form.phone.errors }}</span>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                      <div class="input-box {% if form.nationality.errors %} has-error {% endif %}">
+                        <select   id="id_nationality" name="nationality" class="form-control">
+                            <option 
+                              selected="selected"  
+                              value="{% if user.nationality != '' %}{{user.nationality}}{% endif %}"
+                              >
+                              {% if user.nationality != '' %} {{user.nationality}}  {% else %}  Select Nationality {% endif %} 
+                              </option>
+                              {% for value, text in form.nationality.field.choices %}
+                                  <option value="{{ value }}"{% if user.nationality == value %} selected{% endif %}>{{ text }}</option>
+                              {% endfor %}
+                        </select>
+                        <span> Please select Your Nationality</span>
+                        <span>{{  form.nationality.errors }}</span>
+                      </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                      <div class="input-box {% if form.gender.errors %} has-error {% endif %}">
+                        <select name="gender" class="form-control" data-title="Select Gender" >
+                          {% if user.gender == '' %}
+                              <option  selected="selected"  value=""> Select Gender  </option>
+                          {% endif %}
+                          {% for value, text in form.gender.field.choices %}
+                              <option value="{{ value }}"{% if user.gender == value %} selected{% endif %}>{{ text }}</option>
+                          {% endfor %}
+                        </select>
+                        <span>{{  form.gender.errors }}</span>
+                      </div>
+                    </div>
+
+                    <div class="col-sm-12">
+                      <button type="submit" value="Submit" class="btn-black right-side"  name="submit">Apply</button>
+                    </div>
+
+                  </div>
+                </div>
+            </div>
+          </div>
+        </form>
+          <!-- ***********************  My Orders ************************ --> 
+
+
+          <div id="data-step3" class="account-content" data-temp="tabdata" style="display:none">
+            <div class="row">
+              <div class="col-xs-12">
+                <div class="heading-part heading-bg mb-30">
+                  <h2 class="heading m-0">My Orders</h2>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-xs-12 mb-xs-30">
+                <div class="cart-item-table commun-table">
+                  <div class="table-responsive">
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th colspan="4">
+                            <ul>
+                              <li><span>Order placed</span> <span>17 January 2017</span></li>
+                              <li class="price-box"><span>Total</span> <span class="price">$160.00</span></li>
+                              <li><span>Order No.</span> <span>#011052</span></li>
+                            </ul>
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>
+                            <a href="product-page.html">
+                              <div class="product-image"><img alt="Pioneer" src="images/1.jpg"></div>
+                            </a>
+                          </td>
+                          <td>
+                            <div class="product-title">
+                              <a href="product-page.html">Shipping Address</a>
+                            </div>
+                            <div class="product-info-stock-sku m-0">
+                              <div>
+                                <label>Quantity: </label>
+                                <span class="info-deta">1</span>
+                              </div>
+                            </div>
+                          </td>
+                          <td>
+                            <div class="base-price price-box">
+                              <span class="price">$80.00</span>
+                            </div>
+                          </td>
+                          <td>
+                            <i title="Remove Item From Cart" data-id="100" class="fa fa-trash cart-remove-item"></i>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- CONTAINER END --> 
+
+{% endblock %}

@@ -9,7 +9,6 @@ from django_countries.fields import CountryField
 #Used for the Telephone Field validation
 from django.core.validators import RegexValidator
 
-from django.utils.safestring import mark_safe
 
 
 class Vacancy(models.Model):

@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+{% load account socialaccount %}
+
+
+{% load static %}
+{% block title %}
+  {% trans "Sign In" %}
+{% endblock %}
+
+{% block content %}
+
+
+  <!-- Bread Crumb STRAT -->
+  <div class="container">
+    <div class="bread-crumb mtb-30 center-xs">
+      <div class="page-title">{% trans "Sign In" %}</div>
+      <div class="bread-crumb-inner right-side float-none-xs">
+        <ul>
+          <li><a>Accounts</a><i class="fa fa-angle-right"></i></li>
+          <li>Sign In</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <!-- Bread Crumb END --> 
+
+
+<form class="main-form full" method="POST" action="{% url 'account_login' %}">
+{% csrf_token %}
+  <section class="checkout-section pb-95">
+      <div class="container">
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="checkout-content" >
+
+                <div class="row">
+                  <div class="col-xs-12">
+                    <div class="heading-part align-center">
+                        <p>{% blocktrans %}If you have not created an account yet, then please
+                            <a href="{{ signup_url }}">sign up</a> first.{% endblocktrans %}
+                        </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-lg-6 col-md-8 col-sm-8 col-lg-offset-3 col-sm-offset-2">
+                    <div class="col-sm-12">
+                        <div class="input-box">
+                            
+                            {{ form.as_p }}
+
+                            {% if redirect_field_value %}
+                              <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+                            {% endif %}
+                
+
+                            <a class="button secondaryAction" href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
+                            <button class="btn-black" type="submit">{% trans "Sign Up" %} &raquo;</button>
+                        
+                        </div>
+                    </div>
+                  </div>
+                </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</form>
+
+{% endblock %}

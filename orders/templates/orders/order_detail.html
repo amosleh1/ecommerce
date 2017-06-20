@@ -1,0 +1,335 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+
+{% load static %}
+{% block title %}
+  Order Details
+{% endblock %}
+
+{% block content %}
+
+
+  <!-- Bread Crumb STRAT -->
+  <div class="container">
+    <div class="bread-crumb mtb-30 center-xs">
+      <div class="page-title">Order</div>
+      <div class="bread-crumb-inner right-side float-none-xs">
+        <ul>
+          <li><a href="index.html">Home</a><i class="fa fa-angle-right"></i></li>
+          <li><a href="cart.html">Order</a><i class="fa fa-angle-right"></i></li>
+          <li><span>Order Details</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <!-- Bread Crumb END -->
+  
+  <!-- CONTAIN START -->
+  <section class="checkout-section pb-95">
+    <div class="container">
+      <div class="row">
+        <div class="col-xs-12">
+
+
+          <div class="checkout-step mb-40">
+            <ul>
+              <li> 
+                <a href="#">
+                  <div class="step">
+                    <div class="line"></div>
+                    <div class="circle">1</div>
+                  </div>
+                  <span>Shopping Cart</span>
+                </a>
+              </li>
+              <li class="active"> 
+                <a href="#">
+                  <div class="step">
+                    <div class="line"></div>
+                    <div class="circle">2</div>
+                  </div>
+                  <span>Order Overview</span>
+                </a>
+              </li>
+              <li>
+                <a href="#">
+                  <div class="step">
+                    <div class="line"></div>
+                    <div class="circle">3</div>
+                  </div>
+                  <span>Payment</span>
+                </a>
+              </li>
+              <li>
+                <a href="#">
+                  <div class="step">
+                    <div class="line"></div>
+                    <div class="circle">4</div>
+                  </div>
+                  <span>Order Complete</span>
+                </a>
+              </li>
+            </ul>
+            <hr>
+          </div>
+
+
+
+          <div class="checkout-content" >
+
+            <div class="row">
+              <div class="col-xs-12">
+                <div class="heading-part align-center">
+                    <h2 class="heading">Please fill up your Order details</h2>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-xs-12">
+                <div class="heading-part align-center">
+                    {{form.non_field_errors}}
+                </div>
+              </div>
+            </div>
+
+
+
+            <div class="row">
+
+
+              <div class="col-sm-6 mb-sm-30">
+                <form action="." method="post" class="main-form full">
+                  {% csrf_token %}
+                  <div class="">
+                    <div class="row">
+
+                      <div class="col-xs-12 mb-20">
+                        <div class="heading-part">
+                          <h3 class="sub-heading">Shipping Address</h3>
+                        </div>
+                        <hr>
+                      </div>
+
+                      <div class="col-sm-6">
+                        <div class="input-box {% if form.first_name.errors %} has-error {% endif %}">
+                          <input  maxlength="150" 
+                            name="first_name"  
+                                id="id_first_name" 
+                                type="text" 
+                                 value="{{user.first_name}}"  
+                                placeholder="First Name*" 
+                                class="form-control "
+                                />
+                          <span class='error'>{{  form.first_name.errors }}</span>
+                        </div>
+                      </div>
+
+                      <div class="col-sm-6">
+                        <div class="input-box {% if form.last_name.errors %} has-error {% endif %}">
+                          <input  maxlength="150" 
+                            name="last_name"  
+                                id="id_first_name" 
+                                type="text" 
+                                 value="{{user.last_name}}"  
+                                placeholder="Last Name*" 
+                                class="form-control "
+                                />
+                          <span>{{  form.last_name.errors }}</span>
+                        </div>
+                      </div>
+
+                      <div class="col-sm-6">
+                        <div class="input-box {% if form.email.errors %} has-error{% endif %}">
+                              <input  id="id_email" 
+                                  maxlength="50" 
+                                  name="email" 
+                                  type="email" 
+                                  value="{{user.email}}" 
+                                  placeholder="Email Address*" 
+                                  class="form-control"
+                                  />
+                              <span>{{  form.email.errors }}</span>
+                        </div>
+                      </div>
+
+                      <div class="col-sm-6">
+                          <div class="input-box {% if form.phone.errors %} has-error{% endif %}">
+                          <input  id="id_phone" 
+                              maxlength="16" 
+                              name="phone" 
+                              placeholder="Phone Number" 
+                              type="text" 
+                              {% if user.phone %} value="{{user.phone}}" {% endif %}
+                              class="form-control"
+                              />
+                          <span>Tel. Format: +XXX YYY YYY</span>
+                          <span>{{  form.phone.errors }}</span>
+                          </div>
+                      </div>
+
+                      <div class="col-sm-6">
+                        <div class="input-box {% if form.country.errors %} has-error {% endif %}">
+                          <select   id="id_country" name="country" class="form-control">
+                              <option 
+                                selected="selected"  
+                                value="{% if user.nationality != '' %}{{user.nationality}}{% endif %}"
+                                >
+                                {% if user.nationality != '' %} {{user.nationality}}  {% else %}  Select Shipping Country {% endif %} 
+                                </option>
+                                {% for value, text in form.country.field.choices %}
+                                    <option value="{{ value }}"{% if user.nationality == value %} selected{% endif %}>{{ text }}</option>
+                                {% endfor %}
+                          </select>
+                          <span> Please select Shipping Country</span>
+                          <span>{{  form.nationality.errors }}</span>
+                        </div>
+                      </div>
+
+                      <div class="col-sm-6">
+                        <div class="input-box {% if form.city.errors %} has-error {% endif %}">
+                          <input  maxlength="150" 
+                            name="city"  
+                                id="id_city" 
+                                type="text" 
+                                placeholder="Shipping City Name" 
+                                class="form-control "
+                                 
+                                />
+                          <span>{{  form.city.errors }}</span>
+                        </div>
+                      </div>
+
+                      <div class="col-sm-12">
+                        <div class="input-box {% if form.address.errors %} has-error {% endif %}">
+                          <input  maxlength="150" 
+                            name="address"  
+                                id="id_address" 
+                                type="text"  
+                                placeholder="Shipping Address" 
+                                class="form-control "
+                                />
+                          <span>Please provide the number and street.</span>
+                          <span>{{  form.address.errors }}</span>
+                        </div>
+                      </div>
+
+                      <div class="col-sm-12">
+                        <button type="submit" value="Submit" class="btn-black right-side"  name="submit">Next</button>
+                      </div>
+
+                    </div>
+                  </div>
+                </form>
+              </div>
+
+
+
+
+
+              <div class="col-sm-6 mb-sm-30">
+                <div class="cart-item-table commun-table mb-30">
+                  <div class="table-responsive">
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th>Product</th>
+                          <th>Product Detail</th>
+                          <th>Sub Total</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for item in cart %}
+                          {% with product=item.product %}
+                          <tr>
+                            <td>
+                              <a href="product-page.html">
+                                <div class="product-image"><a href="{{ product.get_absolute_url }}"><img src="{% if product.image %}{{ product.image.url }}{% else %}{% static "img/no_image.png" %}{% endif %}"> </a></div>
+                              </a>
+                            </td>
+                            <td>
+                              <div class="product-title">
+                                <a href="{{ product.get_absolute_url }}"> {{ product.name }}</a>
+                                <div class="product-info-stock-sku m-0">
+                                  <div>
+                                    <label>Price: </label>
+                                    <div class="price-box">
+                                      <span class="info-deta price">${{ item.price }}</span>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="product-info-stock-sku m-0">
+                                  <div>
+                                    <label>Quantity: </label>
+                                    <span class="info-deta">${{ item.quantity }}</span>
+                                  </div>
+                                </div>
+                              </div>
+                            </td>
+                            <td>
+                              <div data-id="100" class="total-price price-box">
+                                  <span class="price">${{ item.total_price }}</span>
+                              </div>
+                            </td>
+                          </tr>
+                          {% endwith %}
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+
+
+                <div class="cart-total-table commun-table mb-30">
+                  <div class="table-responsive">
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th colspan="2">Cart Total</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>Item(s) Subtotal</td>
+                          <td>
+                            <div class="price-box">
+                              <span class="price">${{ cart.get_total_price }}</span>
+                            </div>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>Shipping</td>
+                          <td>
+                            <div class="price-box">
+                              <span class="price">$0</span>
+                            </div>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td><b>Total Amount Payable</b></td>
+                          <td>
+                            <div class="price-box">
+                              <span class="price"><b>${{ cart.get_total_price }}</b></span>
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+
+
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- CONTAINER END --> 
+
+
+{% endblock %}

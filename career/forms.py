@@ -30,7 +30,7 @@ class ResumeForm(ModelForm):
 
 	def clean_resume_file(self):
 		"""
-			SValidate of the sub,itted file use an acceptable extension + an acceptable size
+			Validate the submitted file to use an acceptable extension + an acceptable size
 		"""
 		file = self.cleaned_data.get("resume_file", False)
 		# check file extension 

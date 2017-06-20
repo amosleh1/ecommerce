@@ -15,6 +15,11 @@ import os
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = '587'
+EMAIL_HOST_USER = 'amgad.mosleh@gmail.com'
+EMAIL_HOST_PASSWORD = 'amhmm1982'
+EMAIL_USE_TLS = True
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
@@ -33,14 +38,29 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.auth',
+    #I have unregesrted the Site from the Admin.py. HOwveer for that to work it has to be ordered in this place and not below
+    'django.contrib.sites',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'debug_toolbar',
+    #I have unregesrted the "Site" and "EmailAddress" Apps from the Admin.py. Howveer for that to work it has to be ordered in this place and not below
+    # as an advice make the Allauth applications the first App registered
+    'allauth.socialaccount',
+    'allauth.account',
+    'django_countries',
+    #'debug_toolbar',
     'product',
     'career',
-    'django_countries',
+    'contact',
+    'static_pages',
+    'profiles',
+    'cart',
+    'orders',
+    'paypal.standard.ipn',
+    'payment',
+    # I put this APP at last for the AllAuth pages to be customized based on my base templates and design
+    'allauth',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -60,7 +80,7 @@ ROOT_URLCONF = 'ecommerce.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['ecommerce/base_templates',],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -68,10 +88,22 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'cart.context_processors.cart',
             ],
         },
     },
 ]
+
+
+AUTHENTICATION_BACKENDS = (
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+
+    # `allauth` specific authentication methods, such as login by e-mail
+    'allauth.account.auth_backends.AuthenticationBackend',
+)
+
+
 
 WSGI_APPLICATION = 'ecommerce.wsgi.application'
 
@@ -108,3 +140,50 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = (os.path.join(BASE_DIR,'static'),)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+
+
+# ----------------------------------------------  Cart settings -------------------------------------------
+CART_SESSION_ID = 'cart'
+
+# ----------------------------------------------  django-paypal settings -------------------------------------------
+PAYPAL_RECEIVER_EMAIL = 'django.ecommerce.app@gmail.com'
+PAYPAL_TEST = True
+
+
+# ----------------------------------------------  Allauth settings -------------------------------------------
+SITE_ID = 1
+
+AUTH_USER_MODEL = 'profiles.UserProfile'
+
+LOGIN_URL = '/accounts/login/'
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_URL = "/account/logout/"
+
+#to change from username to email
+ACCOUNT_UNIQUE_EMAIL =True
+ACCOUNT_USER_MODEL_EMAIL_FIELD ="email"
+ACCOUNT_USER_MODEL_USERNAME_FIELD =None
+ACCOUNT_USERNAME_REQUIRED =False
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_AUTHENTICATION_METHOD = "email"
+
+
+ACCOUNT_CONFIRM_EMAIL_ON_GET = True
+ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = LOGIN_URL
+ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = None
+
+ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 3
+# Below attribute affect is: new user will not able to login until he verfy his email
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+ACCOUNT_EMAIL_SUBJECT_PREFIX ="My subject: "
+ACCOUNT_DEFAULT_HTTP_PROTOCOL ="http"
+
+ACCOUNT_LOGIN_ATTEMPTS_LIMIT = 3
+ACCOUNT_LOGOUT_ON_GET =False
+ACCOUNT_LOGOUT_REDIRECT_URL ="/"
+ACCOUNT_SIGNUP_FORM_CLASS = 'profiles.forms.SignupForm'
+
+ACCOUNT_USERNAME_MIN_LENGTH =3
+ACCOUNT_USERNAME_BLACKLIST =[]
+ACCOUNT_PASSWORD_INPUT_RENDER_VALUE =False
+ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION =True

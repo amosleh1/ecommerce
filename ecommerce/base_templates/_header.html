@@ -1,0 +1,262 @@
+  {% load staticfiles %}
+  <header class="navbar navbar-custom" id="header">
+    <div class="header-top">
+      <div class="container">
+        <div class="header-top-inner">
+          <div class="row">
+            <div class="col-sm-5">
+              <div class="top-link top-link-left">
+                <ul>
+                  <li class="language-icon">
+                    <select>
+                      <option selected="selected" value="">English</option>
+                      <option value="">Arabic</option>
+                    </select>
+                  </li>
+                  <li class="sitemap-icon">
+                    <select>
+                      <option selected="selected" value="">SAR</option>
+                      <option value="">USD</option>
+                    </select>
+                  </li>  
+                </ul>
+              </div>
+            </div>
+            <div class="col-sm-7">
+              <div class="top-link right-side">
+                <ul>
+                  
+                  {% if not request.user.is_authenticated %}
+                    <li class="login-icon"><a href="{% url 'account_login' %}" title="Login"><span></span>Login</a></li>
+                    <li class="login-icon"><a href="{% url 'account_signup' %}" title="Login"><span></span>Signup</a></li>
+                  {% else %}
+                    {% if request.user.is_superuser %}
+                      <li class="account-icon"><a href="/admin/" title="Admin Portal"><span></span> Admin Portal</a></li>
+                    {% endif %}
+                    <li class="account-icon"><a href="/profiles/" title="My Account"><span></span> My Account</a></li>
+                    <li class="login-icon"><a href="{% url 'account_logout' %}" title="Login"><span></span>Logout ({{request.user}})</a></li>
+                  {% endif %}
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="header-middle">
+      <div class="container">
+        <div class="header-inner">
+          <div class="row">
+            <div class="col-md-3">
+              <div class="navbar-header float-none-sm">
+                <button data-target=".navbar-collapse" data-toggle="collapse" class="navbar-toggle" type="button"><i class="fa fa-bars"></i></button>
+                <a class="navbar-brand page-scroll" href="/">
+                  <img alt="Pioneer" src="{% static 'img/logo.png'%}">
+                </a> 
+              </div>
+            </div>
+            <div class="col-md-9">
+              <div class="header-right-part right-side float-none-sm">
+                <ul>
+                  <li class="mobile-view-search visible-sm visible-xs">
+                    <div class="header_search_toggle mobile-view">
+                        <div class="search-box">
+                          <input type="text" name="search_query" placeholder="Search entire store here..." class="input-text">
+                          <button class="search-btn"></button>
+                        </div>
+                    </div>
+                  </li>
+                  <li class="shipping-icon visible-lg visible-md">
+                    <a href="#">
+                      <span>  
+                      </span>
+                      <div class="header-right-text">Free Shipping</div>
+                      <div class="header-price">For all orders inside Saudi Arabia</div>
+                    </a>
+                  </li>
+
+
+                {% with total_items=cart|length %}
+                  <li class="cart-icon">
+
+                      <a href="{% url "cart:cart_detail" %}">
+                        <span>
+                          <small class="cart-notification">{{ total_items }}</small>
+                        </span>
+                        <div class="header-right-text">Shopping Cart</div>
+                        <div class="header-price">${{ cart.get_total_price }}</div>
+                      </a>
+                    
+                      <div class="cart-dropdown header-link-dropdown">
+
+                        <ul class="cart-list link-dropdown-list">
+
+                          {% for item in cart %}
+                            {% with product=item.product %}
+                              <li><a href="{% url "cart:cart_remove" product.id %}" class="close-cart"><i class="fa fa-times-circle"></i></a>
+                                <div class="media"> <a href="{{ product.get_absolute_url }}" class="pull-left"><img src="{% if product.image %}{{ product.image.url }}{% else %}{% static "img/no_image.png" %}{% endif %}"> </a></a>
+                                  <div class="media-body">
+                                    <span><a>{{ product.name }}</a></span>
+                                    <p class="cart-price">${{ item.price }}</p>
+                                    <div class="product-qty">
+                                      <div class="custom-qty">
+                                        <input type="text" name="qty" maxlength="8" value="{{ item.quantity }}" title="Qty" class="input-text qty" readonly>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </li>
+                            {% endwith %}
+                          {% endfor %}
+                        </ul>
+
+                        <p class="cart-sub-totle">
+                          <span class="pull-left">Cart Subtotal</span>
+                          <span class="pull-right"><strong class="price-box">${{ cart.get_total_price }}</strong></span>
+                        </p>
+                        <div class="clearfix"></div>
+                        <div class="mt-20"> 
+                          <a href="{% url 'cart:cart_detail' %}" class="btn-color btn">Cart</a>
+                          <a href="#" class="btn-color btn right-side">Checkout</a> 
+                        </div>
+
+                      </div>
+                    </li>
+                  {% endwith %}
+
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="header-bottom">
+      <div class="container">
+        <div id="menu" class="navbar-collapse collapse left-side" >
+          <div class="top-search-bar visible-lg visible-md">
+ 			<form role="form"  action="/search/" method="GET">
+	            <div class="search-box"> <a href="#" class="search-btn"><span></span></a>
+	              <input type="text" name="search_query" value="{{original_search_text}}" class="input-text" placeholder="Search on a Product Here...">
+	              <div class="close-btn search-opener"><span></span></div>
+	            </div>
+             </form>
+          </div>
+          <ul class="nav navbar-nav navbar-left">
+            <li class="level"><a href="/promotion" class="page-scroll {% if request.path == '/promotion' %} active {%endif%}">Promotions</a></li>
+            <li class="level">
+              <span class="opener plus"></span>
+              <a href="/" class="page-scroll  {% if request.path == '/' %} active {%endif%}">All Products</a>
+              <div class="megamenu mobile-sub-menu">
+                <div class="megamenu-inner-top">
+                  <ul class="sub-menu-level1">
+                    <li class="level2">
+                      <a href="/"><span>Women Clothings</span></a>
+                      <ul class="sub-menu-level2">
+                        <li class="level3"><a href="/">Dresses</a></li>
+                        <li class="level3"><a href="/">Sport Jeans</a></li>
+                        <li class="level3"><a href="/">Skirts</a></li>
+                        <li class="level3"><a href="/">Tops</a></li>
+                        <li class="level3"><a href="/">Sleepwear</a></li>
+                        <li class="level3"><a href="/">Jeans</a></li>
+                      </ul>
+                    </li>
+                    <li class="level2">
+                      <a href="/"><span>Women Fashion</span></a>
+                      <ul class="sub-menu-level2 ">
+                        <li class="level3"><a href="/">Blazer & Coat</a></li>
+                        <li class="level3"><a href="/">Sport Shoes</a></li>
+                        <li class="level3"><a href="/">Phone Cases</a></li>
+                        <li class="level3"><a href="/">Trousers</a></li>
+                        <li class="level3"><a href="/">Purse</a></li>
+                        <li class="level3"><a href="/">Wallets</a></li>
+                      </ul>
+                    </li>
+                  </ul>
+                </div>
+                <div class="megamenu-inner-bottom mt-20 visible-lg visible-md">
+                  <a href="/">
+                    <img src="{% static 'img/drop_banner2.jpg'%}" alt="Pioneer">
+                  </a>
+                </div>
+              </div>
+            </li>
+            <li class="level">
+              <span class="opener plus"></span>
+              <a href="/categories" class="page-scroll {% if request.path == '/categories/' %} active {%endif%}">Categories</a>
+              <div class="megamenu full mobile-sub-menu">
+                <div class="megamenu-inner">
+                  <div class="megamenu-inner-top">
+                    <div class="row">
+                      <div class="col-md-3 level2">
+                        <a href="/"><span>Men Fashion</span></a>
+                        <ul class="sub-menu-level2 ">
+                          <li class="level3"><a href="/">Blazer & Coat</a></li>
+                          <li class="level3"><a href="/">Sport Shoes</a></li>
+                          <li class="level3"><a href="/">Phone Cases</a></li>
+                          <li class="level3"><a href="/">Trousers</a></li>
+                          <li class="level3"><a href="/">Purse</a></li>
+                          <li class="level3"><a href="/">Wallets</a></li>
+                        </ul>
+                      </div>
+                      <div class="col-md-3 level2">
+                        <a href="/"><span>Juniors kid</span></a>
+                        <ul class="sub-menu-level2 ">
+                          <li class="level3"><a href="/">Blazer & Coat</a></li>
+                          <li class="level3"><a href="/">Sport Shoes</a></li>
+                          <li class="level3"><a href="/">Phone Cases</a></li>
+                          <li class="level3"><a href="/">Trousers</a></li>
+                          <li class="level3"><a href="/">Purse</a></li>
+                          <li class="level3"><a href="/">Wallets</a></li>
+                        </ul>
+                      </div>
+                      <div class="col-md-3 level2">
+                        <a href="/"><span>Men Clothings</span></a>
+                        <ul class="sub-menu-level2 ">
+                          <li class="level3"><a href="/">Blazer & Coat</a></li>
+                          <li class="level3"><a href="/">Chinos & Trousers</a></li>
+                          <li class="level3"><a href="/">Underwear</a></li>
+                          <li class="level3"><a href="/">Trousers</a></li>
+                          <li class="level3"><a href="/">Purse</a></li>
+                          <li class="level3"><a href="/">Wallets</a></li>
+                        </ul>
+                      </div>
+                      <div class="col-md-3 level2 visible-lg visible-md">
+                        <a href="/">
+                          <img src="{% static 'img/drop_banner.jpg'%}" alt="Pioneer">
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </li>
+            <li class="level"><a  class="page-scroll {% if request.path == '/news' %} active {%endif%}">News</a></li>
+           
+            <li class="level"><a href="/search" class="page-scroll {% if request.path == '/search' %} active {%endif%}">Search</a></li>
+            <li class="level">
+              <span class="opener plus"></span>
+              <a href="/about" class="page-scroll {% if request.path == '/about' %} active {%endif%}" >About us</a>
+              <div class="megamenu mobile-sub-menu">
+                <div class="megamenu-inner-top">
+                  <ul class="sub-menu-level1">
+                    <li class="level2">
+                      <ul class="sub-menu-level2 ">
+                        <li class="level3"><a href="/">Profile</a></li>
+                        <li class="level3"><a href="/">Vision & Mission</a></li>
+                        <li class="level3"><a href="/contact/">Contact</a></li>
+                        <li class="level3"><a href="/career/">Career</a></li>
+                      </ul>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </li>
+          </ul>
+          <div class="search-btn-icon search-opener visible-lg visible-md">
+            <button class="search-btn" ></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>

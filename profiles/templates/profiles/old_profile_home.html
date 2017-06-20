@@ -1,0 +1,310 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+
+{% load static %}
+{% block title %}
+  {% trans "Sign Out" %}
+{% endblock %}
+
+{% block content %}
+
+
+  <!-- Bread Crumb STRAT -->
+  <div class="container">
+    <div class="bread-crumb mtb-30 center-xs">
+      <div class="page-title">Profile Details</div>
+      <div class="bread-crumb-inner right-side float-none-xs">
+        <ul>
+          <li><a>Home</a><i class="fa fa-angle-right"></i></li>
+          <li><a>Profile</a><i class="fa fa-angle-right"></i></li>
+          <li>Details</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <!-- Bread Crumb END --> 
+  
+
+
+  <!-- CONTAIN START -->
+  <section class="checkout-section pb-95">
+    <div class="container">
+      <div class="row">
+
+
+
+        <div class="col-md-3 col-sm-4">
+          <div class="account-sidebar account-tab mb-xs-30">
+            <div class="tab-title-bg">
+              <div class="heading-part">
+                <div class="sub-title"><span></span> My Account</div>
+              </div>
+            </div>
+            <div class="account-tab-inner">
+              <ul class="account-tab-stap">
+                <li id="step1" class="active">
+                  <a href="javascript:void(0)">My Dashboard<i class="fa fa-angle-right"></i>
+                  </a>
+                </li>
+                <li id="step2">
+                  <a href="javascript:void(0)">Account Details<i class="fa fa-angle-right"></i>
+                  </a>
+                </li>
+                <li id="step3">
+                  <a href="javascript:void(0)">My Completed Order List<i class="fa fa-angle-right"></i>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- ***********************  My Dashboard Section ************************ --> 
+        <div class="col-md-9 col-sm-8">
+          <div id="data-step1" class="account-content" data-temp="tabdata">
+            <div class="row">
+              <div class="col-xs-12">
+                <div class="heading-part heading-bg mb-30">
+                  <h2 class="heading m-0">Profile Dashboard</h2>
+                </div>
+              </div>
+            </div>
+            <div class="mb-30">
+              <div class="row">
+                <div class="col-xs-12">
+                  <div class="heading-part">
+                    <h3 class="sub-heading">Hello, {{ profile.username|upper }} ({{ profile.completion_level }}%)</h3>
+                  </div>
+                  <p>Subscribe to the Print Doodles mailing list to receive updates on new product, special offers and other discount information.<a class="account-link" id="subscribelink" href="#">Click Here</a></p>
+                </div>
+              </div>
+            </div>
+            <div class="m-0">
+              <div class="row">
+
+                <div class="col-sm-6">
+                  <div class="cart-total-table address-box commun-table">
+                    <div class="table-responsive">
+                      <table class="table">
+                        <thead>
+                          <tr>
+                            <th>Full Name</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>
+                              <ul>
+                                <li class="inner-heading">
+                                  <p>{{ profile.firstname|upper }} {{ profile.lastname|upper }}</p>
+                                </li>
+                              </ul>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-sm-6">
+                  <div class="cart-total-table address-box commun-table">
+                    <div class="table-responsive">
+                      <table class="table">
+                        <thead>
+                          <tr>
+                            <th>Email Address</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>
+                              <ul>
+                                <li class="inner-heading">
+                                  <p>{{ profile.email }} ({% if profile.email_is_verified %}Verfied {% else %} Not Verfied{% endif %})</p>
+                                </li>
+                              </ul>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <!-- ***********************  Account Details Section ************************ --> 
+        <form action="" class="main-form full" method="POST" >
+          {% csrf_token %}
+          <div id="data-step2" class="account-content" data-temp="tabdata" style="display:none">
+            <div class="row">
+              <div class="col-xs-12">
+                <div class="heading-part heading-bg mb-30">
+                  <h2 class="heading m-0">Account Details</h2>
+                </div>
+              </div>
+            </div>
+            <div class="m-0">
+                <div class="">
+                  <div class="row">
+
+                    <div class="col-sm-6">
+                      <div class="input-box {% if form.first_name.errors %} has-error {% endif %}">
+                        <input  maxlength="150" 
+                          name="firstname"  
+                              id="id_firstname" 
+                              type="text" 
+                              {% if form.firstname.value %} value="{{form.firstname.value}}" {% endif %} 
+                              placeholder="First Name*" 
+                              class="form-control "
+                              />hi
+                      </div>
+                    </div>
+                    <div class="col-sm-6">
+                      <div class="input-box">
+                        <input type="text" required="" placeholder="Email Address">
+                      </div>
+                    </div>
+                    <div class="col-sm-6">
+                      <div class="input-box">
+                        <input type="text" required="" placeholder="Company">
+                      </div>
+                    </div>
+                    <div class="col-sm-6">
+                      <div class="input-box">
+                        <input type="text" required="" placeholder="Contact Number">
+                      </div>
+                    </div>
+                    <div class="col-sm-12">
+                      <div class="input-box">
+                        <input type="text" required="" placeholder="Billing Address">
+                        <span>Please provide the number and street.</span>
+                      </div>
+                    </div>
+                    <div class="col-sm-12">
+                      <div class="input-box">
+                        <input type="text" required="" placeholder="Billing Landmark">
+                        <span>Please include landmark (e.g : Opposite Bank) as the carrier service may find it easier to locate your address.</span>
+                      </div>
+                    </div>
+                    <div class="col-sm-6">
+                      <div class="input-box">
+                        <select name="billingcountryId" id="billingcountryid">
+                          <option selected="" value="">Select Country</option>
+                          <option value="AX">Aland Islands</option>
+                          <option value="AF">Afghanistan</option>
+
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-sm-6">
+                      <div class="input-box">
+                        <select name="billingstateId" id="billingstateid">
+                          <option value="">Select a State</option>
+                          <option value="AP">Andhra Pradesh</option>
+                          <option value="AR">Arunachal Pradesh</option>
+                          <option value="AS">Assam</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-sm-6">
+                      <div class="input-box">
+                        <input type="text" required="" placeholder="Select City">
+                      </div>
+                    </div>
+                    <div class="col-sm-6">
+                      <div class="input-box">
+                        <input type="text" required="" placeholder="Postcode/zip">
+                      </div>
+                    </div>
+                    <div class="col-sm-12">
+                      <div class="check-box">
+                        <span>
+                          <input type="checkbox" class="checkbox" id="chk-billing-address" name="chk-billing-address">
+                        </span>
+                        <label for="chk-billing-address">Use my delivery address as my billing address</label>
+                      </div>
+                    </div>
+                    <div class="col-sm-12">
+                      <button type="submit" value="Submit" class="btn-black right-side"  name="submit">Save</button>
+                    </div>
+                  </div>
+                </div>
+            </div>
+          </div>
+        </form>
+          <!-- ***********************  My Orders ************************ --> 
+
+
+          <div id="data-step3" class="account-content" data-temp="tabdata" style="display:none">
+            <div class="row">
+              <div class="col-xs-12">
+                <div class="heading-part heading-bg mb-30">
+                  <h2 class="heading m-0">My Orders</h2>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-xs-12 mb-xs-30">
+                <div class="cart-item-table commun-table">
+                  <div class="table-responsive">
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th colspan="4">
+                            <ul>
+                              <li><span>Order placed</span> <span>17 January 2017</span></li>
+                              <li class="price-box"><span>Total</span> <span class="price">$160.00</span></li>
+                              <li><span>Order No.</span> <span>#011052</span></li>
+                            </ul>
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>
+                            <a href="product-page.html">
+                              <div class="product-image"><img alt="Pioneer" src="images/1.jpg"></div>
+                            </a>
+                          </td>
+                          <td>
+                            <div class="product-title">
+                              <a href="product-page.html">Shipping Address</a>
+                            </div>
+                            <div class="product-info-stock-sku m-0">
+                              <div>
+                                <label>Quantity: </label>
+                                <span class="info-deta">1</span>
+                              </div>
+                            </div>
+                          </td>
+                          <td>
+                            <div class="base-price price-box">
+                              <span class="price">$80.00</span>
+                            </div>
+                          </td>
+                          <td>
+                            <i title="Remove Item From Cart" data-id="100" class="fa fa-trash cart-remove-item"></i>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- CONTAINER END --> 
+
+{% endblock %}

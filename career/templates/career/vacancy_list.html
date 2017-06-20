@@ -1,4 +1,4 @@
-{% extends "product/base.html" %}
+{% extends "base.html" %}
 {% load staticfiles %}
 
 
@@ -29,10 +29,14 @@
   </div>
   <!-- Bread Crumb END --> 
 
+
+
+
  <!-- COntents STRAT -->
  <section class="pb-95">
     <div class="container">
-            <div class="row">
+          <div class="row">
+            {% if page_list|length > 0 %}
               <div class="col-xs-12 mb-xs-30">
                 <div class="career-list-table commun-table">
                   <div class="table-responsive">
@@ -47,7 +51,7 @@
                       </thead>
                       <tbody>
 
-	                      {% for vacancy in vacancies %}
+	                      {% for vacancy in page_list %}
 	                        <tr>
 	                          <td >
 	                            <a href="{{ vacancy.get_absolute_url }}" ><b>{{ vacancy.title }} </b></a>
@@ -71,60 +75,21 @@
                   </div>
                 </div>
               </div>
-            </div>
 
-
-		{% if vacancies.paginator.num_pages > 1 %}
-            <div class="row">
+            {%else%}
               <div class="col-xs-12">
-                <div class="pagination-bar">
-                  <ul>
-                  	{% if vacancies.has_previous %}
-                    	<li><a href="?{{url_without_page.urlencode}}&page={{ vacancies.previous_page_number }}"><i class="fa fa-angle-left"></i></a></li>
-                    {% endif %}
-
-                    {% if vacancies.number != 1 %}
-                  		<li  {% if vacancies.number == 1%} class="active" {% endif %}  ><a href="?{{url_without_page.urlencode}}&page=1">1</a></li>
-					{% endif %}
-
-                    {% if vacancies.number == 4 %}
-                    	<li><a href="?{{url_without_page.urlencode}}&page={{ vacancies.number|add:-2 }}">{{ vacancies.number|add:-2 }} </a></li>
-                    {% endif %}
-
-                    {% if vacancies.number >= 5 %}
-                    	<li> ... </li>
-                    {% endif %}
-
-                    {% if vacancies.number > 2 %}
-                    	<li><a href="?{{url_without_page.urlencode}}&page={{ vacancies.number|add:-1 }}">{{ vacancies.number|add:-1 }} </a></li>
-                    {% endif %}
-
-                    <li class="active"><a href="{{url_without_page.urlencode}}&page={{ vacancies.number }}">{{ vacancies.number }} </a></li>
-
-                    {% if vacancies.number|add:1 < vacancies.paginator.num_pages or vacancies.number == 1%}
-                    	<li><a href="?{{url_without_page.urlencode}}&page={{ vacancies.number|add:1 }}">{{ vacancies.number|add:1 }} </a></li>
-                    {% endif %}
-
-                    {% if vacancies.number|add:3 == vacancies.paginator.num_pages %}
-                    	<li><a href="?{{url_without_page.urlencode}}&page={{ vacancies.number|add:2 }}">{{ vacancies.number|add:2 }}</a></li>
-                    {% endif %}
-
-                	{% if  vacancies.number|add:4 <= vacancies.paginator.num_pages %}
-                		<li>...</li>
-                	{% endif %}
-
-                	{% if vacancies.paginator.num_pages >= 3 and vacancies.paginator.num_pages != vacancies.number %}
-                    	<li><a href="?{{url_without_page.urlencode}}&page={{ vacancies.paginator.num_pages }}">{{vacancies.paginator.num_pages}}</a></li>
-                    {% endif %}
-
-                    {% if vacancies.has_next %}
-                    	<li><a href="?{{url_without_page.urlencode}}&page={{ vacancies.next_page_number }}"><i class="fa fa-angle-right"></i></a></li>
-                 	{% endif %}
-                  </ul>
+                <div class="heading-part align-center">
+                  </br>
+                    <h3 class="heading">No Vacancies available for the time being.</h3>
+                    <p>Please check again later.</p>
+                    </br>
                 </div>
               </div>
-            </div>
-		{% endif %}
+            {% endif %}
+
+          </div>
+
+      {% include '_paginator.html' %}
 
     </div>
 </section>

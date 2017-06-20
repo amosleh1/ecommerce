@@ -1,0 +1,26 @@
+{% extends "account/base.html" %}
+
+{% load i18n %}
+{% load static %}
+{% block title %}{% trans "Account Inactive" %}{% endblock %}
+
+{% block content %}
+
+
+<br/>
+  <div class="container">
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="heading-part align-center">
+        	</br>
+            <h2 class="heading">{% trans "Account Inactive" %}</h2>
+            <p>{% trans "This account is inactive." %}</p>
+            <img src="{% static 'img/end_sign1.png' %}" >
+            </br>
+        </div>
+      </div>
+    </div>
+  </div>
+<br/>
+
+{% endblock %}
